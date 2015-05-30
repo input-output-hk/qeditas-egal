@@ -1,0 +1,132 @@
+(* Title "Preamble Signature for Dependent Products and Simple Exponents of Sets" *)
+(* Author "Chad E. Brown" *)
+
+(* Unicode False "22A5" *)
+Definition False : prop := forall P : prop , P.
+Definition not : prop -> prop := fun A : prop => A -> False.
+(* Unicode ~ "00ac" *)
+Prefix ~ 700 := not.
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+(* Unicode /\ "2227" *)
+Infix /\ 780 left  := and.
+Axiom andI : forall A B : prop , A -> B -> A /\ B.
+Axiom and3E : forall P1 P2 P3: prop, P1 /\ P2 /\ P3 -> (forall p : prop , (P1 -> P2 -> P3 -> p) -> p).
+Definition or : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> P) -> (B -> P) -> P.
+(* Unicode \/ "2228" *)
+Infix \/ 785 left  := or.
+Definition iff : prop -> prop -> prop := fun A B : prop => (A -> B) /\ (B -> A).
+(* Unicode <-> "2194" *)
+Infix <-> 805 := iff.
+Axiom iffI : forall A B : prop , (A -> B) -> (B -> A) -> (A <-> B).
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+End Poly1_eq.
+Infix = 502 := eq.
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+Axiom eq_sym : forall x y : A , x = y -> y = x.
+End Poly1_eqthms.
+Section Poly1_exdef.
+Variable A : SType.
+Variable Q : A -> prop.
+Definition ex : prop := forall P : prop , (forall x : A , Q x -> P) -> P.
+End Poly1_exdef.
+(* Unicode exists "2203" *)
+Binder+ exists , := ex.
+Section Poly1_exthms.
+Variable A : SType.
+Axiom exI : forall P : A -> prop , forall x : A , P x -> exists x : A , P x.
+End Poly1_exthms.
+Section Poly1.
+Variable A : SType.
+Axiom exandE : forall P Q:A->prop, (exists x : A , P x /\ Q x) -> forall p : prop , (forall x : A , P x -> Q x -> p) -> p.
+End Poly1.
+Section Choice.
+Variable A : SType.
+Parameter Eps : (A -> prop) -> A.
+End Choice.
+Binder some , := Eps.
+Axiom classic : forall P : prop , P \/ ~ P.
+Section IfA.
+Variable A : SType.
+Definition If : prop -> A -> A -> A := (fun p x y => some z : A , p /\ z = x \/ ~ p /\ z = y).
+Notation IfThenElse If.
+Axiom If_or : forall p : prop , forall x y : A , (if p then x else y) = x \/ (if p then x else y) = y.
+End IfA.
+Parameter In : set -> set -> prop.
+Definition nIn : set -> set -> prop := fun x X => ~ In x X.
+(* Unicode /:e "2209" *)
+Infix /:e 502 := nIn.
+Definition Subq : set -> set -> prop := fun X Y => forall x : set , x :e X -> x :e Y.
+Binder+ exists , := ex ; and.
+Axiom Subq_ref : forall X : set , X c= X.
+Axiom Subq_tra : forall X Y Z : set , X c= Y -> Y c= Z -> X c= Z.
+Axiom set_ext : forall X Y : set , X c= Y -> Y c= X -> X = Y.
+(* Unicode Empty "2205" *)
+Parameter Empty : set.
+Axiom EmptyE : forall x : set , x /:e Empty.
+Axiom Subq_Empty : forall X : set , Empty c= X.
+Axiom Empty_eq : forall X : set , (forall x , x /:e X) -> X = Empty.
+(* Unicode Union "22C3" *)
+Parameter Union : set -> set.
+Axiom UnionI : forall X x Y : set , x :e Y -> Y :e X -> x :e (Union X).
+(* Unicode Power "1D4AB" *)
+Parameter Power : set -> set.
+Axiom PowerE : forall X Y : set , Y :e Power X -> Y c= X.
+Axiom PowerI : forall X Y : set , Y c= X -> Y :e (Power X).
+(* Parameter Sep MMUCPW8ve1NeZQSF6QAYrhEzK8uiuz5z6MxqZnhkYVkV3gAE *)
+Parameter Sep : set -> (set -> prop) -> set.
+Notation Sep Sep.
+Axiom SepI : forall X : set , forall P : (set -> prop) , forall x : set , x :e X -> P x -> x :e {x :e X|P x}.
+Axiom SepE : forall X : set , forall P : (set -> prop) , forall x : set , x :e {x :e X|P x} -> x :e X /\ P x.
+Axiom SepE1 : forall X : set , forall P : (set -> prop) , forall x : set , x :e {x :e X|P x} -> x :e X.
+Axiom SepE2 : forall X : set , forall P : (set -> prop) , forall x : set , x :e {x :e X|P x} -> P x.
+(* Parameter Sing MHR1PpBC6jjmn142ZUqFZmz2DtPTkThiU856UxqHRu2d8qev *)
+Parameter Sing:set->set.
+Notation SetEnum1 Sing.
+Axiom SingE : forall x y : set , y :e {x} -> y = x.
+(* Parameter ordsucc MG7MeUQKGRDWGfCpnv4BBfwuRumr4R1ngnkoEgKgz7jpCB6E *)
+Parameter ordsucc : set -> set.
+Notation Nat Empty ordsucc.
+Axiom In_0_1 : 0 :e 1.
+Axiom In_1_2 : 1 :e 2.
+Axiom In_0_2 : 0 :e 2.
+Axiom Subq_1_Sing0 : 1 c= {0}.
+(* Parameter nat_p MGtPhoeZ5SW87BAP3FdYP4552YLVdN58Rrv2tcyyni3UE9wH *)
+Parameter nat_p : set -> prop.
+Axiom nat_trans : forall n , nat_p n -> forall m :e n , m c= n.
+(* Parameter pair MKKGnKnC1quGLGnWpwB65MgQ7bPbCPc48zaQUdmq8s3fSrjf*)
+Parameter pair : set -> set -> set.
+(* Parameter proj0 MFyRcUPX2NP5ybfB4nRBP1Qep5PLtiiKiZ1Gdp88o6P1ZkyY*)
+Parameter proj0 : set -> set.
+(* Parameter proj1 MH32QAUUM5x9B19qpurqyd6qWAZAvcuDRwBRRjQdX94j6fH2*)
+Parameter proj1 : set -> set.
+(* Parameter Sigma MGNw2qbBL6u6B4yyFAmQMbqdhyHwqynrhYepMxjLsK829eTU*)
+Parameter Sigma : set -> (set -> set) -> set.
+(* Unicode Sigma_ "2211" *)
+Binder+ Sigma_ , := Sigma.
+Axiom pair_Sigma : forall X : set , forall Y : set -> set , forall x :e X , forall y :e Y x , pair x y :e Sigma_ x :e X , Y x.
+Axiom Sigma_eta_proj0_proj1 : forall X : set , forall Y : set -> set , forall z :e (Sigma_ x :e X , Y x) , pair (proj0 z) (proj1 z) = z /\ proj0 z :e X /\ proj1 z :e Y (proj0 z).
+Axiom proj_Sigma_eta : forall X : set , forall Y : set -> set , forall z :e (Sigma_ x :e X , Y x) , pair (proj0 z) (proj1 z) = z.
+Definition setprod : set -> set -> set := fun X Y : set => Sigma_ x :e X , Y.
+(* Unicode :*: "2a2f" *)
+Infix :*: 440 left  := setprod.
+(* Parameter lam MGNw2qbBL6u6B4yyFAmQMbqdhyHwqynrhYepMxjLsK829eTU*)
+Parameter lam : set -> (set -> set) -> set.
+(* Parameter ap MJ5EYDZNGhP3BE3iG8STL8H7dpyp21H28dqojZfKHnhxe7Lr*)
+Parameter ap : set -> set -> set.
+Notation SetImplicitOp ap.
+Notation SetLam lam.
+Axiom lamE : forall X : set , forall F : set -> set , forall z : set , z :e (fun x :e X => F x) -> exists x :e X , exists y :e F x , z = pair x y.
+Axiom apI : forall f x y , pair x y :e f -> y :e f x.
+Axiom apE : forall f x y , y :e f x -> pair x y :e f.
+Axiom beta : forall X : set , forall F : set -> set , forall x : set , x :e X -> (fun x :e X => F x) x = F x.
+Axiom beta0 : forall X : set , forall F : set -> set , forall x : set , x /:e X -> (fun x :e X => F x) x = 0.
+Axiom pair_ap_0 : forall x y : set , (pair x y) 0 = x.
+Axiom ap0_Sigma : forall X : set , forall Y : set -> set , forall z : set , z :e (Sigma_ x :e X , Y x) -> (z 0) :e X.
+Definition pair_p : set -> prop := fun u : set => pair (u 0) (u 1) = u.
+Axiom pair_p_I : forall x y , pair_p (pair x y).
+Axiom pair_p_I2 : forall w , (forall u :e w , pair_p u /\ u 0 :e 2) -> pair_p w.
+Axiom tuple_pair : forall x y : set , pair x y = (x,y).

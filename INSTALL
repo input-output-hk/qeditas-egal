@@ -1,0 +1,66 @@
+Egal requires ocaml and openssl. It is compiled on linux in the usual way:
+
+./configure
+make
+
+This requires ocamlopt (the ocaml native code compiler). It creates executables:
+
+bin/egal
+bin/egalqedtheory
+bin/egalqeddoc
+
+If the system only has ocamlc (the bytecode compiler), a bytecode
+version can be compiled as
+
+./configure
+make bytecode
+
+This creates three bytecode files which can be used with ocamlrun:
+
+bin/egal.bytecode
+bin/egalqedtheory.bytecode
+bin/egalqeddoc.bytecode
+
+More details:
+
+The configure script creates a file src/config.ml with the location of openssl.
+
+let openssl_exec = "/usr/bin/openssl"
+
+to correspond to your openssl executable, if it doesn't already.
+
+Here are examples of how to call Egal:
+
+ocamlrun bin/egal.bytecode -ind formaldocs/IndexMar2014 -I formaldocs/ExEq1Preamble.mgs formaldocs/ExEq1Problems.mg
+./bin/egal -ind formaldocs/IndexMar2014 -I formaldocs/ExEq1Preamble.mgs formaldocs/ExEq1.mg
+
+Probably you want to either put egal in your PATH or
+have some kind of alias. Then you can cd to the formaldocs directory and
+do this:
+
+egal -ind IndexMar2014 -I ExEq1Preamble.mgs ExEq1.mg
+egal -ind IndexMar2014 -I CategoryPreamble.mgs CategoryProblems.mg
+
+The command line options are:
+
+-v <verbosity> : Set the verbosity level.
+-I <sigfilenames> : Include these signature files. Signature files are not allowed to have proofs in them.
+-s <sigfilename> : Output a signature file based on the files checked following this option.
+-checksig <sigfilename> : Check that the files checked implement the given signature file.
+-indout <indexfilename> : Create an output this index file.
+-ind <indexfilename> : Use this index file.
+-reporteachitem : Note when each item is being processed, giving global ids when appropriate.
+-polyexpand : (egal only) Expand polymorphic definitions when applied to ground types. This is only needed to process the original treasure hunt documents.
+-qedts <file> : (egalqedtheory only) Output a Qeditas theory specification to the file.
+-eqsigout <file> : (egalqeddoc only) Output a Qeditas signature specification to the file.
+-eqdocout <file> : (egalqeddoc only) Output a Qeditas document to the file.
+-eqh <file1> <file2> : (egalqedtheory and egalqeddoc) <file1> associates Egal identifiers for terms with Qeditas hash values for objects. <file2> associates Egal identifiers for propositions with Qeditas hash values for propositions. The files are appended with new entries as the document is process.
+
+-solves <problemfilename> : Give a problem file and then verify that the files checked after this option solve all the problems in the problem file.
+-reportpfcomplexity : Output information about a "proof complexity" (this was used to suggest the relative sizes of treasures).
+-html <htmlfile> : Create html version of the document.
+-ajax <pffile> : Use this to indicate a file with a proof if Egal is being used as a web service ajax-style. That is how it was used on the mathgate.info server.
+-webout : Use this if Egal should give output messages in html.
+-sqlout : Output mysql queries for the document.
+-sqltermout : Output the global names of terms for the mysql database. Only use this when -sqlout is being used.
+-thmsasexercises : Indicate that proofs should be omitted and replaced by Admitted (i.e., left to reader).

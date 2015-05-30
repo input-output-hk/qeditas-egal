@@ -1,0 +1,399 @@
+(* Title "Classical Principles in Simple Type Theory" *)
+(* Author "Chad E. Brown" *)
+
+(* Salt "2iXkDXTjL9DEMehVE" *)
+
+(** Preamble **)
+(* Unicode False "22A5" *)
+Definition False : prop := forall P : prop , P.
+(* Unicode True "22A4" *)
+Definition True : prop := forall P : prop , P -> P.
+Axiom TrueI : True.
+Definition not : prop -> prop := fun A : prop => A -> False.
+(* Unicode ~ "00ac" *)
+Prefix ~ 700 := not.
+Axiom dnegI : forall A:prop, A -> ~ ~ A.
+Axiom contrapositive : forall A B : prop , (A -> B) -> ~ B -> ~ A.
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+(* Unicode /\ "2227" *)
+Infix /\ 780 left  := and.
+Axiom andI : forall A B : prop , A -> B -> A /\ B.
+Definition or : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> P) -> (B -> P) -> P.
+(* Unicode \/ "2228" *)
+Infix \/ 785 left  := or.
+Axiom orIL : forall A B : prop , A -> A \/ B.
+Axiom orIR : forall A B : prop , B -> A \/ B.
+Axiom or_not_and_demorgan : forall A B:prop, ~ A \/ ~ B -> ~ (A /\ B).
+Definition iff : prop -> prop -> prop := fun A B : prop => (A -> B) /\ (B -> A).
+(* Unicode <-> "2194" *)
+Infix <-> 805 := iff.
+Axiom iffI : forall A B : prop , (A -> B) -> (B -> A) -> (A <-> B).
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+Definition neq : A -> A -> prop := fun x y => ~ eq x y.
+End Poly1_eq.
+Infix = 502 := eq.
+(* Unicode <> "2260" *)
+Infix <> 502 := neq.
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+Axiom eq_sym : forall x y : A , x = y -> y = x.
+End Poly1_eqthms.
+Section Poly1_exdef.
+Variable A : SType.
+Variable Q : A -> prop.
+Definition ex : prop := forall P : prop , (forall x : A , Q x -> P) -> P.
+End Poly1_exdef.
+(* Unicode exists "2203" *)
+Binder+ exists , := ex.
+Section Poly1_exthms.
+Variable A : SType.
+Axiom exI : forall P : A -> prop , forall x : A , P x -> exists x : A , P x.
+Axiom not_ex_all_demorgan : forall P : A -> prop , (~ exists x : A , P x) -> forall x : A , ~ P x.
+Axiom ex_not_all_demorgan : forall P : A -> prop , (exists x : A , ~ P x) -> ~ forall x : A , P x.
+End Poly1_exthms.
+Section EqExercises.
+Variable A : SType.
+Axiom eq_leastrefl_1 : forall x y : A , (forall r : A -> A -> prop , (forall z : A , r z z) -> r x y) -> x = y.
+Axiom eq_leastrefl_2 : forall x y : A , x = y -> (forall r : A -> A -> prop , (forall z : A , r z z) -> r x y).
+End EqExercises.
+Axiom prop_ext : forall A B : prop , (A <-> B) -> A = B.
+Axiom prop_ext2 : forall A B : prop , (A -> B) -> (B -> A) -> A = B.
+Section PE.
+Variable A : SType.
+Axiom pred_ext : forall P Q : A -> prop , P c= Q -> Q c= P -> P = Q.
+End PE.
+Section RE.
+Variable A B : SType.
+Axiom reln_ext : forall R S : A -> B -> prop , R c= S -> S c= R -> R = S.
+End RE.
+Section Choice.
+Variable A : SType.
+Parameter Eps : (A -> prop) -> A.
+Axiom EpsR : forall P : A -> prop , forall x : A , P x -> P (Eps P).
+End Choice.
+Binder some , := Eps.
+
+(** Main Body **)
+
+(*** Diaconescu proof of excluded middle from choice. ***)
+Theorem classic : forall P:prop, P \/ ~ P.
+let P:prop.
+set p1 := fun x : prop => x \/ P.
+set p2 := fun x : prop => ~x \/ P.
+claim L1:p1 True.
+{ prove (True \/ P). apply orIL. exact TrueI. }
+claim L2:(some x:prop, p1 x) \/ P.
+{ exact (EpsR prop p1 True L1). }
+claim L3:p2 False.
+{ prove ~False \/ P. apply orIL. assume H. exact H. }
+claim L4:~(some x:prop, p2 x) \/ P.
+{ exact (EpsR prop p2 False L3). }
+apply L2.
+- assume H1:(some x:prop, p1 x).
+  apply L4.
+  + assume H2:~(some x:prop, p2 x).
+    prove P \/ ~ P.
+    apply orIR.
+    prove ~ P.
+    assume H3 : P.
+    claim L5:p1 = p2.
+    {
+      apply (pred_ext prop).
+      - prove (p1 c= p2).
+        let x. assume H4.
+        prove (~x \/ P).
+        apply orIR.
+	prove P.
+        exact H3.
+      - prove (p2 c= p1).
+        let x. assume H4.
+        prove (x \/ P).
+        apply orIR.
+	prove P.
+        exact H3.
+    }
+    apply H2. rewrite <- L5. exact H1.
+  + assume H2:P.
+    prove P \/ ~ P.
+    apply orIL.
+    prove P.
+    exact H2.
+- assume H1:P.
+    prove P \/ ~ P.
+    apply orIL.
+    prove P.
+    exact H1.
+Qed.
+
+Theorem NNPP : forall p:prop, ~ ~ p -> p.
+let p. assume H1: ~ ~ p.
+apply (classic p).
+- assume H2: p. exact H2.
+- assume H2: ~ p. exact (H1 H2 p).
+Qed.
+
+Theorem prop_deg : forall p:prop, p = True \/ p = False.
+let p. apply (classic p).
+- assume H1: p. apply orIL.
+  apply prop_ext2 p.
+  + assume H2. exact TrueI.
+  + assume H2. exact H1.
+- assume H1: ~ p. apply orIR. apply prop_ext2.
+  + assume H2: p. exact (H1 H2).
+  + assume H2: False. exact (H2 p).
+Qed.
+
+Theorem not_and_or_demorgan : forall A B:prop, ~(A /\ B) -> ~A \/ ~B.
+let A B. assume u:~(A /\ B).
+apply (classic A).
+- assume a:A. apply (classic B).
+  + assume b:B. apply u. apply andI.
+    * exact a.
+    * exact b.
+  + assume v:~B. apply orIR. exact v.
+- assume v:~A. apply orIL. exact v.
+Qed.
+
+Theorem not_and_or_demorgan_iff : forall A B:prop, ~(A /\ B) <-> ~A \/ ~B.
+let A B.
+apply iffI.
+- exact (not_and_or_demorgan A B).
+- exact (or_not_and_demorgan A B).
+Qed.
+
+Section DeMorganQuants.
+
+Variable A:SType.
+
+Theorem not_all_ex_demorgan : forall P:A->prop, ~(forall x:A, P x) -> exists x:A, ~P x.
+let P.
+assume u:~forall x:A, P x.
+apply NNPP.
+assume v:~exists x:A, ~P x.
+apply u. let x. apply NNPP.
+assume w:~P x. 
+exact (not_ex_all_demorgan A (fun x => ~P x) v x w).
+Qed.
+
+Theorem not_all_ex_demorgan_iff : forall P:A->prop, ~(forall x:A, P x) <-> exists x:A, ~P x.
+let P.
+apply iffI.
+- exact (not_all_ex_demorgan P).
+- exact (ex_not_all_demorgan A P).
+Qed.
+
+End DeMorganQuants.
+
+(*** Classical Logical Identities ***)
+Theorem eq_neg_neg_id : eq (prop->prop) (fun x:prop => ~~x) (fun x:prop => x).
+apply (pred_ext prop (fun x => ~~x) (fun x => x)).
+- apply NNPP.
+- apply dnegI.
+Qed.
+
+Theorem eq_true : True = (~False).
+exact (prop_ext2 True (~ False) (fun (_ : True) (H : False) => H) (fun _ : ~ False => TrueI)).
+Qed.
+
+Theorem eq_and_nor : and = (fun (x y:prop) => ~(~x \/ ~y)).
+apply (reln_ext prop prop and (fun (x y:prop) => ~(~x \/ ~y))).
+- let x y.
+  assume H1: x /\ y.
+  assume H2: ~x \/ ~y.
+  prove False.
+  apply H1. assume H3: x. assume H4: y.
+  apply H2.
+  + assume H5: ~x. exact (H5 H3).
+  + assume H5: ~y. exact (H5 H4).
+- let x y.
+  assume H1: ~(~x \/ ~y).
+  prove (x /\ y).
+  apply (classic x).
+  + assume H2: x. apply (classic y).
+    * { assume H3: y. apply andI.
+        - exact H2.
+        - exact H3.
+      }
+    * assume H3: ~y. apply H1. apply orIR. exact H3.
+  + assume H2: ~x. apply H1. apply orIL. exact H2.
+Qed.
+
+Theorem eq_or_nand : or = (fun (x y:prop) => ~(~x /\ ~y)).
+apply (reln_ext prop prop).
+- let x y.
+  assume H1: x \/ y.
+  assume H2: ~x /\ ~y.
+  apply H2. assume H3 H4. exact (H1 False H3 H4).
+- let x y.
+  assume H1:~(~x /\ ~y).
+  apply (classic x).
+  + assume H2: x. apply orIL. exact H2.
+  + assume H2: ~x. apply (classic y).
+    * assume H3: y. apply orIR. exact H3.
+    * assume H3: ~y. apply H1. exact (andI (~x) (~y) H2 H3).
+Qed.
+
+Theorem eq_or_imp : or = (fun (x y:prop) => ~ x -> y).
+apply (reln_ext prop prop).
+- let x y.
+  assume H1: x \/ y.
+  assume H2: ~x.
+  prove y.
+  apply H1.
+  + assume H3: x. exact (H2 H3 y).
+  + assume H3: y. exact H3.
+- let x y.
+  assume H1:~x -> y.
+  apply (classic x).
+  + assume H2: x. apply orIL. exact H2.
+  + assume H2: ~x. apply orIR. exact (H1 H2).
+Qed.
+
+Theorem eq_and_imp : and = (fun (x y:prop) => ~ (x -> ~ y)).
+apply (reln_ext prop prop).
+- let x y.
+  assume H1: x /\ y.
+  assume H2: x -> ~y.
+  apply H1. assume H3: x. assume H4: y.
+  exact (H2 H3 H4).
+- let x y.
+  assume H1:~(x -> ~y).
+  apply (classic x).
+  + assume H2: x. apply (classic y).
+    * assume H3: y. exact (andI x y H2 H3).
+    * assume H3: ~y. apply H1. assume _. exact H3.
+  + assume H2: ~x. apply H1. assume H3: x. apply (H2 H3).
+Qed.
+
+Theorem eq_imp_or : (fun (x y:prop) => (x -> y)) = (fun (x y:prop) => (~x \/ y)).
+apply (reln_ext prop prop).
+- let x y.
+  assume H1: x -> y.
+  prove ~x \/ y.
+  apply (classic x).
+  + assume H2: x. apply orIR. exact (H1 H2).
+  + assume H2: ~x. apply orIL. exact H2.
+- let x y.
+  assume H1: ~x \/ y.
+  apply H1.
+  + assume H2: ~x. assume H3: x. apply (H2 H3).
+  + assume H2: y. assume _. exact H2.
+Qed.
+
+Theorem eq_contrapositive : (fun (x y:prop) => (x -> y)) = (fun (x y:prop) => (~y -> ~x)).
+apply (reln_ext prop prop).
+- exact contrapositive.
+- let x y.
+  assume H1: ~y -> ~x.
+  assume H2: x.
+  apply NNPP.
+  assume H3: ~y.
+  exact (H1 H3 H2).
+Qed.
+
+Theorem eq_iff : iff = (eq prop).
+apply (reln_ext prop prop).
+- let x y.
+  prove (x <-> y) -> x = y.
+  apply prop_ext.
+- let x y.
+  assume H1: x = y.
+  prove x <-> y.
+  rewrite <- H1.
+  prove x <-> x.
+  prove ((x -> x) /\ (x -> x)).
+  apply andI.
+  + assume H2: x. exact H2.
+  + assume H2: x. exact H2.
+Qed.
+
+Section EqThms.
+
+Variable A:SType.
+
+Theorem eq_sym_eq : (fun (x y:A) => x = y) = (fun (x y:A) => y = x).
+exact (reln_ext A A (eq A) (fun s t : A => t = s) (eq_sym A) (fun x y => eq_sym A y x)).
+Qed.
+
+Theorem eq_forall_nexists : (fun (f:A -> prop) => forall x:A, f x) = (fun (f:A -> prop) => ~exists x:A, ~f x).
+apply (pred_ext (A -> prop)).
+- let f:A->prop. assume u: forall x:A, f x. assume v: exists x:A, ~f x.
+  apply v.
+  let x:A. assume w: ~f x.
+  exact w (u x).
+- let f:A->prop. assume u: ~exists x:A, ~f x. let x:A.
+  apply NNPP.
+  assume v: ~f x.
+  apply u.
+  witness x.
+  exact v.
+Qed.
+
+Theorem eq_exists_nforall : (ex A) = (fun (f:A -> prop) => ~forall x:A, ~f x).
+apply (pred_ext (A -> prop)).
+- let f:A->prop. assume u: exists x:A, f x. assume v: forall x:A, ~f x.
+  apply u. let x. assume w: f x. exact v x w.
+- let f:A->prop. assume u: ~forall x:A, ~f x.
+  apply NNPP.
+  assume v:~exists x:A, f x.
+  apply u. let x. assume w:f x. apply v. witness x. exact w.
+Qed.
+
+Theorem eq_leib2 : (fun (x y:A) => forall (p: A -> prop), ~ p x -> ~ p y) = (eq A).
+apply (reln_ext A A).
+- let x y. assume H1: forall p:A->prop, ~p x -> ~p y.
+  prove x = y.
+  apply NNPP.
+  prove ~ (x <> y).
+  apply (H1 (fun z => x <> z)).
+  prove ~ ~ (x = x).
+  apply dnegI. apply (eqI A).
+- let x y. assume H1: x = y. let p. assume H2: ~p x.
+  prove ~p y. rewrite <- H1. exact H2.
+Qed.
+
+Theorem eq_leib3 : (fun (x y:A) => forall (r: A -> A -> prop), (forall z:A, r z z) -> r x y) = (eq A).
+apply (reln_ext A A).
+- exact (eq_leastrefl_1 A).
+- exact (eq_leastrefl_2 A).
+Qed. 
+
+Theorem eq_leib4 : (fun (x y:A) => forall (r: A -> A -> prop),~ r x y -> ~ (forall z:A, r z z)) = (eq A).
+prove ((fun x y:A => forall r:A->A->prop, ((fun p q:prop => ~q -> ~p) (forall z:A, r z z) (r x y))) = (eq A)).
+rewrite <- eq_contrapositive.
+exact eq_leib3.
+Qed.
+
+End EqThms.
+
+Section Exercises.
+
+Variable A:SType.
+
+Example Drinker : forall d:A->prop, exists x:A, d x -> forall x:A, d x.
+let d.
+prove (ex A (fun x => d x -> forall x:A, d x)).
+rewrite (eq_exists_nforall A).
+prove ~forall x:A, ~(d x -> forall x:A, d x).
+assume H1: forall x:A, ~(d x -> forall x:A, d x).
+apply (H1 (some x:A, True)).
+prove d (some x:A, True) -> forall x:A, d x.
+assume _.
+prove ((fun (f:A -> prop) => forall x:A, f x) d).
+rewrite (eq_forall_nexists A).
+prove ~exists x:A, ~d x.
+assume H2: exists x:A, ~d x.
+apply H2.
+let x.
+assume H3: ~d x.
+apply (H1 x).
+prove d x -> forall x:A, d x.
+assume H4: d x.
+prove False.
+exact (H3 H4).
+Qed.
+
+End Exercises.

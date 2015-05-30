@@ -1,0 +1,50 @@
+(* Title "Preamble Signature for Introduction to the Zermelo-Fraenkel Set Operators I" *)
+(* Author "Chad E. Brown" *)
+
+(* Unicode False "22A5" *)
+Definition False : prop := forall P : prop , P.
+Definition not : prop -> prop := fun A : prop => A -> False.
+(* Unicode ~ "00ac" *)
+Prefix ~ 700 := not.
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+(* Unicode /\ "2227" *)
+Infix /\ 780 left  := and.
+Axiom andI : forall A B : prop , A -> B -> A /\ B.
+Axiom andEL : forall A B : prop , A /\ B -> A.
+Axiom andER : forall A B : prop , A /\ B -> B.
+Definition iff : prop -> prop -> prop := fun A B : prop => (A -> B) /\ (B -> A).
+(* Unicode <-> "2194" *)
+Infix <-> 805 := iff.
+Axiom iffI : forall A B : prop , (A -> B) -> (B -> A) -> (A <-> B).
+Axiom iffEL : forall A B : prop , (A <-> B) -> A -> B.
+Axiom iffER : forall A B : prop , (A <-> B) -> B -> A.
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+Definition neq : A -> A -> prop := fun x y => ~ eq x y.
+End Poly1_eq.
+Infix = 502 := eq.
+(* Unicode <> "2260" *)
+Infix <> 502 := neq.
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+End Poly1_eqthms.
+Section Poly1_exdef.
+Variable A : SType.
+Variable Q : A -> prop.
+Definition ex : prop := forall P : prop , (forall x : A , Q x -> P) -> P.
+End Poly1_exdef.
+(* Unicode exists "2203" *)
+Binder+ exists , := ex.
+Section Poly1_exthms.
+Variable A : SType.
+Axiom exI : forall P : A -> prop , forall x : A , P x -> exists x : A , P x.
+End Poly1_exthms.
+Section Poly1.
+Variable A : SType.
+Variable P : A -> prop.
+Variable Q : A -> prop.
+Axiom exandI : forall x : A , P x -> Q x -> exists x : A , P x /\ Q x.
+Axiom exandE : (exists x : A , P x /\ Q x) -> forall p : prop , (forall x : A , P x -> Q x -> p) -> p.
+End Poly1.

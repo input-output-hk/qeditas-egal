@@ -1,0 +1,92 @@
+(* Title "Preamble Signature for Ordered Pairs as Sets" *)
+(* Author "Chad E. Brown" *)
+
+(* Unicode False "22A5" *)
+Definition False : prop := forall P : prop , P.
+Definition not : prop -> prop := fun A : prop => A -> False.
+(* Unicode ~ "00ac" *)
+Prefix ~ 700 := not.
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+(* Unicode /\ "2227" *)
+Infix /\ 780 left  := and.
+Axiom andI : forall A B : prop , A -> B -> A /\ B.
+Definition or : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> P) -> (B -> P) -> P.
+(* Unicode \/ "2228" *)
+Infix \/ 785 left  := or.
+Definition iff : prop -> prop -> prop := fun A B : prop => (A -> B) /\ (B -> A).
+(* Unicode <-> "2194" *)
+Infix <-> 805 := iff.
+Axiom iffI : forall A B : prop , (A -> B) -> (B -> A) -> (A <-> B).
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+Definition neq : A -> A -> prop := fun x y => ~ eq x y.
+End Poly1_eq.
+Infix = 502 := eq.
+(* Unicode <> "2260" *)
+Infix <> 502 := neq.
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+Axiom eq_sym : forall x y : A , x = y -> y = x.
+End Poly1_eqthms.
+Section Poly1_exdef.
+Variable A : SType.
+Variable Q : A -> prop.
+Definition ex : prop := forall P : prop , (forall x : A , Q x -> P) -> P.
+End Poly1_exdef.
+(* Unicode exists "2203" *)
+Binder+ exists , := ex.
+Section Poly1_exthms.
+Variable A : SType.
+Axiom exI : forall P : A -> prop , forall x : A , P x -> exists x : A , P x.
+End Poly1_exthms.
+Section Poly1.
+Variable A : SType.
+Variable P : A -> prop.
+Variable Q : A -> prop.
+Axiom exandE : (exists x : A , P x /\ Q x) -> forall p : prop , (forall x : A , P x -> Q x -> p) -> p.
+End Poly1.
+Section FE.
+Variable A B : SType.
+Axiom func_ext : forall f g : A -> B , (forall x : A , f x = g x) -> f = g.
+End FE.
+Parameter In : set -> set -> prop.
+Definition Subq : set -> set -> prop := fun X Y => forall x : set , x :e X -> x :e Y.
+Binder+ exists , := ex ; and.
+Axiom set_ext : forall X Y : set , X c= Y -> Y c= X -> X = Y.
+(* Unicode Empty "2205" *)
+Parameter Empty : set.
+(* Parameter ordsucc MG7MeUQKGRDWGfCpnv4BBfwuRumr4R1ngnkoEgKgz7jpCB6E *)
+Parameter ordsucc : set -> set.
+Notation Nat Empty ordsucc.
+Definition nat_p : set -> prop := fun n : set => forall p : set -> prop , p 0 -> (forall x : set , p x -> p (ordsucc x)) -> p n.
+(* Parameter Inj1 MGa2zFoFbADQTYj3r8qzzZkJPA7XboyF8iDgJ2wEAG8JmVbv*)
+Parameter Inj1 : set -> set.
+(* Parameter Inj0 MHHJXj44xEDbcHcAKmYXTZjgB1SKGHLvQdYtsTUexgYd6qhw*)
+Parameter Inj0 : set -> set.
+(* Parameter Unj MLq1aLep5XcNKZ4pHmRuBUENBve9HfUYUXfNoNFe5E2kLurP*)
+Parameter Unj : set -> set.
+Axiom Unj_Inj1_eq : forall X : set , Unj (Inj1 X) = X.
+Axiom Inj1_inj : forall X Y : set , Inj1 X = Inj1 Y -> X = Y.
+Axiom Unj_Inj0_eq : forall X : set , Unj (Inj0 X) = X.
+Axiom Inj0_inj : forall X Y : set , Inj0 X = Inj0 Y -> X = Y.
+Axiom Inj0_Inj1_neq : forall X Y : set , Inj0 X <> Inj1 Y.
+(* Parameter setsum MKKGnKnC1quGLGnWpwB65MgQ7bPbCPc48zaQUdmq8s3fSrjf *)
+Parameter setsum : set -> set -> set.
+(* Unicode :+: "002b" *)
+Infix :+: 450 left  := setsum.
+Axiom Inj0_setsum : forall X Y x : set , x :e X -> Inj0 x :e X :+: Y.
+Axiom Inj1_setsum : forall X Y y : set , y :e Y -> Inj1 y :e X :+: Y.
+Axiom setsum_Inj_inv : forall X Y z : set , z :e X :+: Y -> (exists x :e X , z = Inj0 x) \/ (exists y :e Y , z = Inj1 y).
+Axiom Inj0_setsum_0L : forall X : set , 0 :+: X = Inj0 X.
+Axiom Inj1_setsum_1L : forall X : set , 1 :+: X = Inj1 X.
+Axiom nat_setsum1_ordsucc : forall n : set , nat_p n -> 1 :+: n = ordsucc n.
+Axiom setsum_0_0 : 0 :+: 0 = 0.
+Axiom setsum_1_0_1 : 1 :+: 0 = 1.
+Axiom setsum_1_1_2 : 1 :+: 1 = 2.
+(* Parameter ReplSep MH3YCcpFJ7KL3vGACnmMYpor6so4KFgnSSBfAHDGTrXoSvjn *)
+Parameter ReplSep : set -> (set -> prop) -> (set -> set) -> set.
+Notation ReplSep ReplSep.
+Axiom ReplSepI : forall X : set , forall P : set -> prop , forall F : set -> set , forall x : set , x :e X -> P x -> F x :e {F x|x :e X,P x}.
+Axiom ReplSepE2 : forall X : set , forall P : set -> prop , forall F : set -> set , forall y : set , y :e {F x|x :e X,P x} -> forall p : prop , (forall x :e X , P x -> y = F x -> p) -> p.

@@ -1,0 +1,41 @@
+(* Title "Preamble Signature for Conditionals" *)
+(* Author "Chad E. Brown" *)
+
+(* Unicode False "22A5" *)
+Definition False : prop := forall P : prop , P.
+(* Unicode True "22A4" *)
+Definition True : prop := forall P : prop , P -> P.
+Axiom TrueI : True.
+Definition not : prop -> prop := fun A : prop => A -> False.
+(* Unicode ~ "00ac" *)
+Prefix ~ 700 := not.
+Axiom dnegI : forall A:prop, A -> ~ ~ A.
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+(* Unicode /\ "2227" *)
+Infix /\ 780 left  := and.
+Axiom andI : forall A B : prop , A -> B -> A /\ B.
+Axiom andEL : forall A B : prop , A /\ B -> A.
+Axiom andER : forall A B : prop , A /\ B -> B.
+Definition or : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> P) -> (B -> P) -> P.
+(* Unicode \/ "2228" *)
+Infix \/ 785 left  := or.
+Axiom orIL : forall A B : prop , A -> A \/ B.
+Axiom orIR : forall A B : prop , B -> A \/ B.
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+End Poly1_eq.
+Infix = 502 := eq.
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+Axiom eq_sym : forall x y : A , x = y -> y = x.
+End Poly1_eqthms.
+Axiom prop_ext2 : forall A B : prop , (A -> B) -> (B -> A) -> A = B.
+Section Choice.
+Variable A : SType.
+Parameter Eps : (A -> prop) -> A.
+Axiom EpsR : forall P : A -> prop , forall x : A , P x -> P (Eps P).
+End Choice.
+Binder some , := Eps.
+Axiom classic : forall P : prop , P \/ ~ P.

@@ -1,0 +1,61 @@
+(* Title "Preamble Signature for Binary Relations" *)
+(* Author "Chad E. Brown" *)
+
+(* Unicode False "22A5" *)
+Definition False : prop := forall P : prop , P.
+(* Unicode True "22A4" *)
+Definition True : prop := forall P : prop , P -> P.
+Axiom TrueI : True.
+Definition not : prop -> prop := fun A : prop => A -> False.
+(* Unicode ~ "00ac" *)
+Prefix ~ 700 := not.
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+(* Unicode /\ "2227" *)
+Infix /\ 780 left  := and.
+Axiom andI : forall A B : prop , A -> B -> A /\ B.
+Axiom andEL : forall A B : prop , A /\ B -> A.
+Axiom andER : forall A B : prop , A /\ B -> B.
+Definition or : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> P) -> (B -> P) -> P.
+(* Unicode \/ "2228" *)
+Infix \/ 785 left  := or.
+Axiom orIL : forall A B : prop , A -> A \/ B.
+Axiom orIR : forall A B : prop , B -> A \/ B.
+Axiom orE : forall A B C : prop , (A -> C) -> (B -> C) -> A \/ B -> C.
+Section PropN.
+Variable P1 P2 P3 : prop.
+Axiom and3I : P1 -> P2 -> P3 -> P1 /\ P2 /\ P3.
+Axiom and3E : P1 /\ P2 /\ P3 -> (forall p : prop , (P1 -> P2 -> P3 -> p) -> p).
+Axiom or3E : P1 \/ P2 \/ P3 -> (forall p : prop , (P1 -> p) -> (P2 -> p) -> (P3 -> p) -> p).
+Variable P4 : prop.
+Axiom and4I : P1 -> P2 -> P3 -> P4 -> P1 /\ P2 /\ P3 /\ P4.
+Axiom and4E : P1 /\ P2 /\ P3 /\ P4 -> (forall p : prop , (P1 -> P2 -> P3 -> P4 -> p) -> p).
+End PropN.
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+Definition neq : A -> A -> prop := fun x y => ~ eq x y.
+End Poly1_eq.
+Infix = 502 := eq.
+(* Unicode <> "2260" *)
+Infix <> 502 := neq.
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+Axiom eq_sym : forall x y : A , x = y -> y = x.
+Axiom eq_trans : forall x y z : A , x = y -> y = z -> x = z.
+End Poly1_eqthms.
+Section Poly1_exdef.
+Variable A : SType.
+Variable Q : A -> prop.
+Definition ex : prop := forall P : prop , (forall x : A , Q x -> P) -> P.
+End Poly1_exdef.
+(* Unicode exists "2203" *)
+Binder+ exists , := ex.
+Section PredPoly1.
+Variable A : SType.
+Definition bigintersect := fun (D : (A -> prop) -> prop) (x : A) => forall P : A -> prop , D P -> P x.
+End PredPoly1.
+Section PE.
+Variable A : SType.
+Axiom pred_ext : forall P Q : A -> prop , P c= Q -> Q c= P -> P = Q.
+End PE.

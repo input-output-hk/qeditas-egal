@@ -1,0 +1,84 @@
+This directory contains updated versions of the formal documents
+released with the original version of Egal in 2014. The documents are
+mostly the same, but many of the global identifiers needed to be
+changed because Egal no longer expands polymorphic definitions when
+applied to ground types (unless -polyexpand is set).
+In addition a Require command is used to indicate dependency of a document
+on a signature. Egal ignores this, but it is output as part of the Qeditas
+document.
+
+Alternative versions of the same documents without using signatures are in qeditasdocs2.
+
+Here is how Egal can be used to create a theory corresponding to the
+code in Foundation.mg (Higher Order Tarski-Grothendieck Set Theory):
+
+egalqedtheory -qedts tgts Foundation.mg
+
+The result is to create a binary file tgts which Qeditas can interpret as a theory specification.
+Such a theory specification can be part of the output of a Qeditas transaction, which when
+published and confirmed creates the theory.
+
+The *.mgs files can be used to create Qeditas signature specifications and the
+*.mg files other than Foundation.mg can be used to create Qeditas documents.
+Here are the appropriate commands.
+
+First start from a fresh index file and fresh files to relate Egal identifiers to Qeditas hashvals.
+
+rm IndexMay2015 egaltoqedtmh egaltoqedknh
+
+Then process the files in order.
+
+egalqeddoc -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout proplogic PropLogic1.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I ExEq1Preamble.mgs -qeddocout exeq1 ExEq1.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout preds1preamble Preds1Preamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I Preds1Preamble.mgs -qeddocout preds1 Preds1.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout relns1preamble Relns1Preamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I Relns1Preamble.mgs -qeddocout relns1 Relns1.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout knastertarskipreamble KnasterTarskiPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I KnasterTarskiPreamble.mgs -qeddocout knastertarski KnasterTarski.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout relns2preamble Relns2Preamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I Relns2Preamble.mgs -qeddocout relns2 Relns2.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout classical1preamble Classical1Preamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I Classical1Preamble.mgs -qeddocout classical1 Classical1.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout conditionalspreamble ConditionalsPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I ConditionalsPreamble.mgs -qeddocout conditionals Conditionals.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout exactly1ofpreamble Exactly1ofPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I Exactly1ofPreamble.mgs -qeddocout exactly1of Exactly1of.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout quotientspreamble QuotientsPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I QuotientsPreamble.mgs -qeddocout quotients Quotients.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout zermelo1908preamble Zermelo1908Preamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I Zermelo1908Preamble.mgs -qeddocout zermelo1908 Zermelo1908.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout set1apreamble Set1aPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I Set1aPreamble.mgs -qeddocout set1a Set1a.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout set1bpreamble Set1bPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I Set1bPreamble.mgs -qeddocout set1b Set1b.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout set1cpreamble Set1cPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I Set1cPreamble.mgs -qeddocout set1c Set1c.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout set2preamble Set2Preamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I Set2Preamble.mgs -qeddocout set2 Set2.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout epsindpreamble EpsIndPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I EpsIndPreamble.mgs -qeddocout epsind EpsInd.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout nat1preamble Nat1Preamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I Nat1Preamble.mgs -qeddocout nat1 Nat1.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout nat2preamble Nat2Preamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I Nat2Preamble.mgs -qeddocout nat2 Nat2.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout univinfpreamble UnivInfPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I UnivInfPreamble.mgs -qeddocout univinf UnivInf.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout ordinals1preamble Ordinals1Preamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I Ordinals1Preamble.mgs -qeddocout ordinals1 Ordinals1.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout disjointunionspreamble DisjointUnionsPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I DisjointUnionsPreamble.mgs -qeddocout disjointunions DisjointUnions.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout orderedpairspreamble OrderedPairsPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I OrderedPairsPreamble.mgs -qeddocout orderedpairs OrderedPairs.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout depsumspreamble DepSumsPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I DepSumsPreamble.mgs -qeddocout depsums DepSums.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout funcssetspreamble FuncsSetsPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I FuncsSetsPreamble.mgs -qeddocout funcssets FuncsSets.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout depprodspreamble DepProdsPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I DepProdsPreamble.mgs -qeddocout depprods DepProds.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout categorypreamble CategoryPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I CategoryPreamble.mgs -qeddocout categoryproblems CategoryProblems.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout modalpreamble ModalPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I ModalPreamble.mgs -qeddocout modal Modal.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qedsigout goedelgodpreamble GoedelGodPreamble.mgs
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -I GoedelGodPreamble.mgs -qeddocout goedelgod GoedelGod.mg

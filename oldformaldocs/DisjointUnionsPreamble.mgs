@@ -1,0 +1,100 @@
+(* Title "Preamble Signature for Disjoint Unions" *)
+(* Author "Chad E. Brown" *)
+
+(* Unicode False "22A5" *)
+Definition False : prop := forall P : prop , P.
+Definition not : prop -> prop := fun A : prop => A -> False.
+(* Unicode ~ "00ac" *)
+Prefix ~ 700 := not.
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+(* Unicode /\ "2227" *)
+Infix /\ 780 left  := and.
+Axiom andER : forall A B : prop , A /\ B -> B.
+Definition or : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> P) -> (B -> P) -> P.
+(* Unicode \/ "2228" *)
+Infix \/ 785 left  := or.
+Axiom orIL : forall A B : prop , A -> A \/ B.
+Axiom orIR : forall A B : prop , B -> A \/ B.
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+Definition neq : A -> A -> prop := fun x y => ~ eq x y.
+End Poly1_eq.
+Infix = 502 := eq.
+(* Unicode <> "2260" *)
+Infix <> 502 := neq.
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+Axiom eq_sym : forall x y : A , x = y -> y = x.
+End Poly1_eqthms.
+Section Poly1_exdef.
+Variable A : SType.
+Variable Q : A -> prop.
+Definition ex : prop := forall P : prop , (forall x : A , Q x -> P) -> P.
+End Poly1_exdef.
+(* Unicode exists "2203" *)
+Binder+ exists , := ex.
+Section Poly1.
+Variable A : SType.
+Variable P : A -> prop.
+Variable Q : A -> prop.
+Axiom exandE : (exists x : A , P x /\ Q x) -> forall p : prop , (forall x : A , P x -> Q x -> p) -> p.
+End Poly1.
+Parameter In : set -> set -> prop.
+Definition nIn : set -> set -> prop := fun x X => ~ In x X.
+(* Unicode /:e "2209" *)
+Infix /:e 502 := nIn.
+Definition Subq : set -> set -> prop := fun X Y => forall x : set , x :e X -> x :e Y.
+Binder+ exists , := ex ; and.
+Axiom set_ext : forall X Y : set , X c= Y -> Y c= X -> X = Y.
+(* Unicode Empty "2205" *)
+Parameter Empty : set.
+Axiom EmptyE : forall x : set , x /:e Empty.
+Parameter Repl : set -> (set -> set) -> set.
+Notation Repl Repl.
+Axiom ReplE : forall X : set , forall F : set -> set , forall y : set , y :e {F x|x :e X} -> exists x : set , x :e X /\ y = F x.
+Axiom ReplE2 : forall X : set , forall F : set -> set , forall y : set , y :e {F x|x :e X} -> forall p : prop , (forall x : set , x :e X -> y = F x -> p) -> p.
+Axiom ReplI : forall X : set , forall F : set -> set , forall x : set , x :e X -> F x :e {F x|x :e X}.
+Axiom Repl_Empty : forall F : set -> set , {F x|x :e Empty} = Empty.
+(* Parameter Sing MHR1PpBC6jjmn142ZUqFZmz2DtPTkThiU856UxqHRu2d8qev *)
+Parameter Sing : set -> set.
+Notation SetEnum1 Sing.
+Axiom SingI : forall x : set , x :e {x}.
+Axiom SingE : forall x y : set , y :e {x} -> y = x.
+(* Parameter binunion MLywQTtJcoNKgztgfTu69bhu4eUuLMxPDoLPPJ551y1WpprR *)
+Parameter binunion : set -> set -> set.
+(* Unicode :\/: "222a" *)
+Infix :\/: 345 left  := binunion.
+Axiom binunionI1 : forall X Y z : set , z :e X -> z :e X :\/: Y.
+Axiom binunionI2 : forall X Y z : set , z :e Y -> z :e X :\/: Y.
+Axiom binunionE : forall X Y z : set , z :e X :\/: Y -> z :e X \/ z :e Y.
+(* Parameter setminus MLMsWhiht6i83rjFXLosmtTErHVWxGQxbd3mAzSo6cVA8YPP *)
+Parameter setminus : set -> set -> set.
+(* Unicode :\: "2216" *)
+Infix :\: 350 := setminus.
+Axiom setminusI : forall X Y z , (z :e X) -> (z /:e Y) -> z :e X :\: Y.
+Axiom setminusE : forall X Y z , (z :e X :\: Y) -> z :e X /\ z /:e Y.
+Axiom setminusE1 : forall X Y z , (z :e X :\: Y) -> z :e X.
+Axiom Repl_restr : forall X : set , forall F G : set -> set , (forall x : set , x :e X -> F x = G x) -> {F x|x :e X} = {G x|x :e X}.
+Axiom In_ind : forall P : set -> prop , (forall X : set , (forall x : set , x :e X -> P x) -> P X) -> forall X : set , P X.
+(* Parameter In_rec MKXFGSBfXZpd7xrb87BY7kHprE19yeifa8XHagUckHSeVMSW*)
+Parameter In_rec : (set -> (set -> set) -> set) -> set -> set.
+Axiom In_rec_eq : forall F : set -> (set -> set) -> set , (forall X : set , forall g h : set -> set , (forall x , x :e X -> g x = h x) -> F X g = F X h) -> forall X : set , In_rec F X = F X (In_rec F).
+(* Parameter ordsucc MG7MeUQKGRDWGfCpnv4BBfwuRumr4R1ngnkoEgKgz7jpCB6E *)
+Parameter ordsucc : set -> set.
+Axiom ordsuccI2 : forall x : set , x :e ordsucc x.
+Axiom ordsuccE : forall x y : set , y :e ordsucc x -> y :e x \/ y = x.
+Notation Nat Empty ordsucc.
+Axiom In_0_1 : 0 :e 1.
+Axiom Subq_1_Sing0 : 1 c= {0}.
+Definition nat_p : set -> prop := fun n : set => forall p : set -> prop , p 0 -> (forall x : set , p x -> p (ordsucc x)) -> p n.
+Axiom nat_0 : nat_p 0.
+Axiom nat_ordsucc : forall n : set , nat_p n -> nat_p (ordsucc n).
+Axiom nat_1 : nat_p 1.
+Axiom nat_ordsucc_in_ordsucc : forall n , nat_p n -> forall m :e n , ordsucc m :e ordsucc n.
+Axiom nat_inv : forall n , nat_p n -> n = 0 \/ exists x , nat_p x /\ n = ordsucc x.
+Axiom nat_p_trans : forall n , nat_p n -> forall m :e n , nat_p m.
+Axiom nat_trans : forall n , nat_p n -> forall m :e n , m c= n.
+Axiom nat_complete_ind : forall p : set -> prop , (forall n , nat_p n -> (forall m :e n , p m) -> p n) -> forall n , nat_p n -> p n.
+Axiom nat_0_in_ordsucc : forall n , nat_p n -> 0 :e ordsucc n.

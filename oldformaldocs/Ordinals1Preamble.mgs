@@ -1,0 +1,91 @@
+(* Title "Preamble Signature for Introduction to Ordinals" *)
+(* Author "Chad E. Brown" *)
+
+Section BasicSystemExercises1.
+(* Unicode False "22A5" *)
+Definition False : prop := forall P : prop , P.
+Axiom FalseE : forall P : prop , False -> P.
+Definition not : prop -> prop := fun A : prop => A -> False.
+(* Unicode ~ "00ac" *)
+Prefix ~ 700 := not.
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+(* Unicode /\ "2227" *)
+Infix /\ 780 left  := and.
+Axiom andI : forall A B : prop , A -> B -> A /\ B.
+Axiom andEL : forall A B : prop , A /\ B -> A.
+Axiom andER : forall A B : prop , A /\ B -> B.
+Definition or : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> P) -> (B -> P) -> P.
+(* Unicode \/ "2228" *)
+Infix \/ 785 left  := or.
+Axiom orIL : forall A B : prop , A -> A \/ B.
+Axiom orIR : forall A B : prop , B -> A \/ B.
+Axiom orE : forall A B C : prop , (A -> C) -> (B -> C) -> A \/ B -> C.
+Section PropN.
+Variable P1 P2 P3 : prop.
+Axiom or3I1 : P1 -> P1 \/ P2 \/ P3.
+Axiom or3I2 : P2 -> P1 \/ P2 \/ P3.
+Axiom or3I3 : P3 -> P1 \/ P2 \/ P3.
+Axiom or3E : P1 \/ P2 \/ P3 -> (forall p : prop , (P1 -> p) -> (P2 -> p) -> (P3 -> p) -> p).
+End PropN.
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+Definition neq : A -> A -> prop := fun x y => ~ eq x y.
+End Poly1_eq.
+Infix = 502 := eq.
+(* Unicode <> "2260" *)
+Infix <> 502 := neq.
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+Axiom eq_sym : forall x y : A , x = y -> y = x.
+End Poly1_eqthms.
+Section RelnPoly1.
+Variable A:SType.
+Definition reflexive : (A->A->prop)->prop := fun R => forall x:A, R x x.
+Definition irreflexive : (A->A->prop)->prop := fun R => forall x:A, ~R x x.
+Definition antisymmetric : (A->A->prop)->prop := fun R => forall x y:A, R x y -> R y x -> x = y.
+Definition transitive : (A->A->prop)->prop := fun R => forall x y z:A, R x y -> R y z -> R x z.
+Definition linear : (A->A->prop)->prop := fun R => forall x y:A, R x y \/ R y x.
+Definition trichotomous_or : (A->A->prop)->prop := fun R => forall x y:A, R x y \/ x = y \/ R y x.
+Definition partialorder : (A->A->prop)->prop := fun R => reflexive R /\ antisymmetric R /\ transitive R.
+Definition totalorder : (A->A->prop)->prop := fun R => partialorder R /\ linear R.
+Definition strictpartialorder : (A->A->prop)->prop := fun R => irreflexive R /\ transitive R.
+Definition stricttotalorder : (A->A->prop)->prop := fun R => strictpartialorder R /\ trichotomous_or R.
+End RelnPoly1.
+Axiom classic : forall P : prop , P \/ ~ P.
+Definition exactly1of2 : prop -> prop -> prop := fun A B : prop => A /\ ~ B \/ ~ A /\ B.
+Definition exactly1of3 : prop -> prop -> prop -> prop := fun A B C : prop => exactly1of2 A B /\ ~ C \/ ~ A /\ ~ B /\ C.
+Axiom exactly1of3_I1 : forall A B C : prop , A -> ~ B -> ~ C -> exactly1of3 A B C.
+Axiom exactly1of3_I2 : forall A B C : prop , ~ A -> B -> ~ C -> exactly1of3 A B C.
+Axiom exactly1of3_I3 : forall A B C : prop , ~ A -> ~ B -> C -> exactly1of3 A B C.
+Parameter In : set -> set -> prop.
+Definition nIn : set -> set -> prop := fun x X => ~ In x X.
+(* Unicode /:e "2209" *)
+Infix /:e 502 := nIn.
+Definition Subq : set -> set -> prop := fun X Y => forall x : set , x :e X -> x :e Y.
+Axiom Subq_ref : forall X : set , X c= X.
+Axiom set_ext : forall X Y : set , X c= Y -> Y c= X -> X = Y.
+(* Unicode Empty "2205" *)
+Parameter Empty : set.
+Axiom EmptyE : forall x : set , x /:e Empty.
+(* Unicode Union "22C3" *)
+Parameter Union : set -> set.
+Axiom UnionE2 : forall X x : set , x :e (Union X) -> forall p : prop , (forall Y : set , x :e Y -> Y :e X -> p) -> p.
+Axiom UnionI : forall X x Y : set , x :e Y -> Y :e X -> x :e (Union X).
+Axiom In_ind : forall P : set -> prop , (forall X : set , (forall x : set , x :e X -> P x) -> P X) -> forall X : set , P X.
+Axiom In_irref : forall x , x /:e x.
+Axiom In_no2cycle : forall x y , x :e y -> y /:e x.
+(* Parameter ordsucc MG7MeUQKGRDWGfCpnv4BBfwuRumr4R1ngnkoEgKgz7jpCB6E *)
+Parameter ordsucc : set -> set.
+Axiom ordsuccI1 : forall x : set , x c= ordsucc x.
+Axiom ordsuccI2 : forall x : set , x :e ordsucc x.
+Axiom ordsuccE : forall x y : set , y :e ordsucc x -> y :e x \/ y = x.
+Notation Nat Empty ordsucc.
+Definition nat_p : set -> prop := fun n : set => forall p : set -> prop , p 0 -> (forall x : set , p x -> p (ordsucc x)) -> p n.
+Axiom nat_ind : forall p : set -> prop , p 0 -> (forall n , nat_p n -> p n -> p (ordsucc n)) -> forall n , nat_p n -> p n.
+Axiom nat_p_trans : forall n , nat_p n -> forall m :e n , nat_p m.
+(* Parameter omega MJakUpqttEykyeNhc3XKxZNtLcofknKa9gn29vrqAbewtGYr*)
+Parameter omega : set.
+Axiom omega_nat_p : forall n :e omega , nat_p n.
+Axiom nat_p_omega : forall n : set , nat_p n -> n :e omega.

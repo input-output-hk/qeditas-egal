@@ -1,0 +1,83 @@
+(* Title "Preamble Signature for Natural Numbers as Sets" *)
+(* Author "Chad E. Brown" *)
+
+(* Unicode False "22A5" *)
+Definition False : prop := forall P : prop , P.
+Definition not : prop -> prop := fun A : prop => A -> False.
+(* Unicode ~ "00ac" *)
+Prefix ~ 700 := not.
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+(* Unicode /\ "2227" *)
+Infix /\ 780 left  := and.
+Axiom andI : forall A B : prop , A -> B -> A /\ B.
+Axiom andEL : forall A B : prop , A /\ B -> A.
+Axiom andER : forall A B : prop , A /\ B -> B.
+Definition or : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> P) -> (B -> P) -> P.
+(* Unicode \/ "2228" *)
+Infix \/ 785 left  := or.
+Axiom orIL : forall A B : prop , A -> A \/ B.
+Axiom orIR : forall A B : prop , B -> A \/ B.
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+Definition neq : A -> A -> prop := fun x y => ~ eq x y.
+End Poly1_eq.
+Infix = 502 := eq.
+(* Unicode <> "2260" *)
+Infix <> 502 := neq.
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+Axiom eq_sym : forall x y : A , x = y -> y = x.
+End Poly1_eqthms.
+Section Poly1_exdef.
+Variable A : SType.
+Variable Q : A -> prop.
+Definition ex : prop := forall P : prop , (forall x : A , Q x -> P) -> P.
+End Poly1_exdef.
+(* Unicode exists "2203" *)
+Binder+ exists , := ex.
+Section Poly1_exthms.
+Variable A : SType.
+Axiom exI : forall P : A -> prop , forall x : A , P x -> exists x : A , P x.
+End Poly1_exthms.
+Parameter In : set -> set -> prop.
+Definition nIn : set -> set -> prop := fun x X => ~ In x X.
+(* Unicode /:e "2209" *)
+Infix /:e 502 := nIn.
+Definition Subq : set -> set -> prop := fun X Y => forall x : set , x :e X -> x :e Y.
+Definition nSubq : set -> set -> prop := fun X Y => ~ Subq X Y.
+(* Unicode /c= "2288" *)
+Infix /c= 502 := nSubq.
+Axiom Subq_ref : forall X : set , X c= X.
+Axiom Subq_tra : forall X Y Z : set , X c= Y -> Y c= Z -> X c= Z.
+Binder+ exists , := ex ; and.
+Axiom set_ext : forall X Y : set , X c= Y -> Y c= X -> X = Y.
+(* Unicode Empty "2205" *)
+Parameter Empty : set.
+Axiom EmptyE : forall x : set , x /:e Empty.
+Axiom Subq_Empty : forall X : set , Empty c= X.
+(* Unicode Union "22C3" *)
+Parameter Union : set -> set.
+Axiom UnionE2 : forall X x : set , x :e (Union X) -> forall p : prop , (forall Y : set , x :e Y -> Y :e X -> p) -> p.
+Axiom UnionI : forall X x Y : set , x :e Y -> Y :e X -> x :e (Union X).
+(* Parameter UPair MHANdqNd8qPYjgPJug4t52j3JL41cLUy5KCibeyEq5yq3ytH *)
+Parameter UPair : set -> set -> set.
+Notation SetEnum2 UPair.
+Axiom UPairE : forall x y z : set , x :e {y,z} -> x = y \/ x = z.
+Axiom UPairI1 : forall y z : set , y :e {y,z}.
+Axiom UPairI2 : forall y z : set , z :e {y,z}.
+(* Parameter Sing MHR1PpBC6jjmn142ZUqFZmz2DtPTkThiU856UxqHRu2d8qev *)
+Parameter Sing : set -> set.
+Notation SetEnum1 Sing.
+Axiom SingI : forall x : set , x :e {x}.
+Axiom SingE : forall x y : set , y :e {x} -> y = x.
+(* Parameter binunion MLywQTtJcoNKgztgfTu69bhu4eUuLMxPDoLPPJ551y1WpprR *)
+Parameter binunion : set -> set -> set.
+(* Unicode :\/: "222a" *)
+Infix :\/: 345 left  := binunion.
+Axiom binunionI1 : forall X Y z : set , z :e X -> z :e X :\/: Y.
+Axiom binunionI2 : forall X Y z : set , z :e Y -> z :e X :\/: Y.
+Axiom binunionE : forall X Y z : set , z :e X :\/: Y -> z :e X \/ z :e Y.
+Axiom In_irref : forall x , x /:e x.
+Axiom In_no2cycle : forall x y , x :e y -> y /:e x.

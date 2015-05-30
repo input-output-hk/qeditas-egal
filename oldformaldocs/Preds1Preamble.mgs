@@ -1,0 +1,64 @@
+(* Title "Preamble Signature for Predicates and Extensionality" *)
+(* Author "Chad E. Brown" *)
+
+(* Unicode False "22A5" *)
+Definition False : prop := forall P : prop , P.
+(* Unicode True "22A4" *)
+Definition True : prop := forall P : prop , P -> P.
+Axiom TrueI : True.
+Definition not : prop -> prop := fun A : prop => A -> False.
+(* Unicode ~ "00ac" *)
+Prefix ~ 700 := not.
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+(* Unicode /\ "2227" *)
+Infix /\ 780 left  := and.
+Axiom andI : forall A B : prop , A -> B -> A /\ B.
+Axiom andEL : forall A B : prop , A /\ B -> A.
+Axiom andER : forall A B : prop , A /\ B -> B.
+Definition or : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> P) -> (B -> P) -> P.
+(* Unicode \/ "2228" *)
+Infix \/ 785 left  := or.
+Axiom orIL : forall A B : prop , A -> A \/ B.
+Axiom orIR : forall A B : prop , B -> A \/ B.
+Section BasicLogicExercises1.
+Variable A : prop.
+Variable B : prop.
+Axiom and_com_imp : A /\ B -> B /\ A.
+Axiom or_com_imp : A \/ B -> B \/ A.
+Variable C : prop.
+Axiom and_asso_imp1 : A /\ (B /\ C) -> (A /\ B) /\ C.
+Axiom and_asso_imp2 : (A /\ B) /\ C -> A /\ (B /\ C).
+Axiom or_asso_imp1 : A \/ (B \/ C) -> (A \/ B) \/ C.
+Axiom or_asso_imp2 : (A \/ B) \/ C -> A \/ (B \/ C).
+Axiom and_or_distrL_imp1 : A /\ (B \/ C) -> A /\ B \/ A /\ C.
+Axiom and_or_distrL_imp2 : A /\ B \/ A /\ C -> A /\ (B \/ C).
+Axiom and_or_distrR_imp1 : (A \/ B) /\ C -> A /\ C \/ B /\ C.
+Axiom and_or_distrR_imp2 : A /\ C \/ B /\ C -> (A \/ B) /\ C.
+Axiom or_and_distrL_imp1 : A \/ B /\ C -> (A \/ B) /\ (A \/ C).
+Axiom or_and_distrL_imp2 : (A \/ B) /\ (A \/ C) -> A \/ B /\ C.
+Axiom or_and_distrR_imp1 : A /\ B \/ C -> (A \/ C) /\ (B \/ C).
+Axiom or_and_distrR_imp2 : (A \/ C) /\ (B \/ C) -> A /\ B \/ C.
+End BasicLogicExercises1.
+Definition iff : prop -> prop -> prop := fun A B : prop => (A -> B) /\ (B -> A).
+(* Unicode <-> "2194" *)
+Infix <-> 805 := iff.
+Axiom iffI : forall A B : prop , (A -> B) -> (B -> A) -> (A <-> B).
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+End Poly1_eq.
+Infix = 502 := eq.
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+Axiom eq_sym : forall x y : A , x = y -> y = x.
+Axiom eq_trans : forall x y z : A , x = y -> y = z -> x = z.
+Axiom eq_trans3 : forall x0 x1 x2 x3 : A , x0 = x1 -> x1 = x2 -> x2 = x3 -> x0 = x3.
+End Poly1_eqthms.
+Section Poly1_exdef.
+Variable A : SType.
+Variable Q : A -> prop.
+Definition ex : prop := forall P : prop , (forall x : A , Q x -> P) -> P.
+End Poly1_exdef.
+(* Unicode exists "2203" *)
+Binder+ exists , := ex.

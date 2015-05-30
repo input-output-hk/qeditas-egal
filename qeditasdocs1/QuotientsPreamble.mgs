@@ -1,0 +1,55 @@
+(* Title "Preamble Signature for Quotients" *)
+(* Author "Chad E. Brown" *)
+
+(* Unicode False "22A5" *)
+Definition False : prop := forall P : prop , P.
+Axiom FalseE : forall P : prop , False -> P.
+Definition not : prop -> prop := fun A : prop => A -> False.
+(* Unicode ~ "00ac" *)
+Prefix ~ 700 := not.
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+(* Unicode /\ "2227" *)
+Infix /\ 780 left  := and.
+Axiom andI : forall A B : prop , A -> B -> A /\ B.
+Axiom andEL : forall A B : prop , A /\ B -> A.
+Axiom andER : forall A B : prop , A /\ B -> B.
+Definition or : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> P) -> (B -> P) -> P.
+(* Unicode \/ "2228" *)
+Infix \/ 785 left  := or.
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+End Poly1_eq.
+Infix = 502 := eq.
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+Axiom eq_sym : forall x y : A , x = y -> y = x.
+End Poly1_eqthms.
+Section PE.
+Variable A : SType.
+Axiom pred_ext : forall P Q : A -> prop , P c= Q -> Q c= P -> P = Q.
+End PE.
+Section RelnPoly1.
+Variable A : SType.
+Definition symmetric : (A -> A -> prop) -> prop := fun R => forall x y : A , R x y -> R y x.
+Definition transitive : (A -> A -> prop) -> prop := fun R => forall x y z : A , R x y -> R y z -> R x z.
+Definition per : (A -> A -> prop) -> prop := fun R => symmetric R /\ transitive R.
+Axiom per_tra : forall R : A -> A -> prop , per R -> transitive R.
+Axiom per_stra1 : forall R : A -> A -> prop , per R -> forall x y z : A , R y x -> R y z -> R x z.
+Axiom per_ref1 : forall R : A -> A -> prop , per R -> forall x y : A , R x y -> R x x.
+End RelnPoly1.
+Section Choice.
+Variable A : SType.
+Parameter Eps : (A -> prop) -> A.
+Axiom EpsR : forall P : A -> prop , forall x : A , P x -> P (Eps P).
+End Choice.
+Binder some , := Eps.
+Section IfA.
+Variable A : SType.
+Definition If : prop -> A -> A -> A := (fun p x y => some z : A , p /\ z = x \/ ~ p /\ z = y).
+Notation IfThenElse If.
+Axiom If_correct : forall p : prop , forall x y : A , p /\ (if p then x else y) = x \/ ~ p /\ (if p then x else y) = y.
+Axiom If_0 : forall p : prop , forall x y : A , ~ p -> (if p then x else y) = y.
+Axiom If_1 : forall p : prop , forall x y : A , p -> (if p then x else y) = x.
+End IfA.

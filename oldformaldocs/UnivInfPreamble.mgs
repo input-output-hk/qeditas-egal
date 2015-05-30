@@ -1,0 +1,100 @@
+(* Title "Preamble Signature for Universes and Infinity" *)
+(* Author "Chad E. Brown" *)
+
+(* Unicode False "22A5" *)
+Definition False : prop := forall P : prop , P.
+Axiom FalseE : forall P : prop , False -> P.
+Definition not : prop -> prop := fun A : prop => A -> False.
+(* Unicode ~ "00ac" *)
+Prefix ~ 700 := not.
+Axiom notI : forall A : prop , (A -> False) -> ~ A.
+Axiom notE : forall A : prop , ~ A -> A -> False.
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+(* Unicode /\ "2227" *)
+Infix /\ 780 left  := and.
+Axiom andI : forall A B : prop , A -> B -> A /\ B.
+Definition or : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> P) -> (B -> P) -> P.
+(* Unicode \/ "2228" *)
+Infix \/ 785 left := or.
+Axiom and3I : forall P1 P2 P3 : prop, P1 -> P2 -> P3 -> P1 /\ P2 /\ P3.
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+Definition neq : A -> A -> prop := fun x y => ~ eq x y.
+End Poly1_eq.
+Infix = 502 := eq.
+(* Unicode <> "2260" *)
+Infix <> 502 := neq.
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+Axiom eq_sym : forall x y : A , x = y -> y = x.
+End Poly1_eqthms.
+Section Poly1_exdef.
+Variable A : SType.
+Variable Q : A -> prop.
+Definition ex : prop := forall P : prop , (forall x : A , Q x -> P) -> P.
+End Poly1_exdef.
+(* Unicode exists "2203" *)
+Binder+ exists , := ex.
+Section Poly1_exthms.
+Variable A : SType.
+Axiom exI : forall P : A -> prop , forall x : A , P x -> exists x : A , P x.
+End Poly1_exthms.
+Section Choice.
+Variable A : SType.
+Parameter Eps : (A -> prop) -> A.
+End Choice.
+Binder some , := Eps.
+Axiom classic : forall P : prop , P \/ ~ P.
+Section IfA.
+Variable A : SType.
+Definition If : prop -> A -> A -> A := (fun p x y => some z : A , p /\ z = x \/ ~ p /\ z = y).
+Notation IfThenElse If.
+Axiom If_0 : forall p : prop , forall x y : A , ~ p -> (if p then x else y) = y.
+Axiom If_1 : forall p : prop , forall x y : A , p -> (if p then x else y) = x.
+End IfA.
+Parameter In : set -> set -> prop.
+Definition nIn : set -> set -> prop := fun x X => ~ In x X.
+(* Unicode /:e "2209" *)
+Infix /:e 502 := nIn.
+Definition Subq : set -> set -> prop := fun X Y => forall x : set , x :e X -> x :e Y.
+Binder+ exists , := ex ; and.
+Axiom set_ext : forall X Y : set , X c= Y -> Y c= X -> X = Y.
+(* Unicode Empty "2205" *)
+Parameter Empty : set.
+Axiom EmptyE : forall x : set , x /:e Empty.
+(* Unicode Union "22C3" *)
+Parameter Union : set -> set.
+(* Unicode Power "1D4AB" *)
+Parameter Power : set -> set.
+Axiom Empty_In_Power : forall X : set , Empty :e Power X.
+Axiom Self_In_Power : forall X : set , X :e Power X.
+Parameter Repl : set -> (set -> set) -> set.
+Notation Repl Repl.
+Axiom ReplE2 : forall X : set , forall F : set -> set , forall y : set , y :e {F x|x :e X} -> forall p : prop , (forall x : set , x :e X -> y = F x -> p) -> p.
+Axiom ReplI : forall X : set , forall F : set -> set , forall x : set , x :e X -> F x :e {F x|x :e X}.
+(* Parameter UPair MHANdqNd8qPYjgPJug4t52j3JL41cLUy5KCibeyEq5yq3ytH *)
+Parameter UPair : set -> set -> set.
+Notation SetEnum2 UPair.
+Axiom UPairE : forall x y z : set , x :e {y,z} -> x = y \/ x = z.
+Axiom UPairI1 : forall y z : set , y :e {y,z}.
+Axiom UPairI2 : forall y z : set , z :e {y,z}.
+Axiom UPair_com_Subq : forall x y : set , {x,y} c= {y,x}.
+Axiom UPair_com : forall x y : set , {x,y} = {y,x}.
+Definition Sing : set -> set := fun x => {x,x}.
+Notation SetEnum1 Sing.
+Definition binunion : set -> set -> set := fun X Y => Union {X,Y}.
+(* Unicode :\/: "222a" *)
+Infix :\/: 345 left  := binunion.
+Definition ordsucc : set -> set := fun x : set => x :\/: {x}.
+Notation Nat Empty ordsucc.
+Definition nat_p : set -> prop := fun n : set => forall p : set -> prop , p 0 -> (forall x : set , p x -> p (ordsucc x)) -> p n.
+Axiom nat_ind : forall p : set -> prop , p 0 -> (forall n , nat_p n -> p n -> p (ordsucc n)) -> forall n , nat_p n -> p n.
+Axiom neq_ordsucc_0 : forall a : set , ordsucc a <> 0.
+Axiom ordsucc_inj : forall a b : set , ordsucc a = ordsucc b -> a = b.
+(* Parameter Sep MMUCPW8ve1NeZQSF6QAYrhEzK8uiuz5z6MxqZnhkYVkV3gAE *)
+Parameter Sep : set -> (set -> prop) -> set.
+Notation Sep Sep.
+Axiom SepI : forall X : set , forall P : (set -> prop) , forall x : set , x :e X -> P x -> x :e {x :e X|P x}.
+Axiom SepE2 : forall X : set , forall P : (set -> prop) , forall x : set , x :e {x :e X|P x} -> P x.

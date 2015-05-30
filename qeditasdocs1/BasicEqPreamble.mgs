@@ -1,0 +1,15 @@
+(* Title "Basic Equality Preamble" *)
+(* Author "Chad E. Brown" *)
+
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+End Poly1_eq.
+
+Infix = 502 := eq.
+
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+Axiom eq_sym : forall x y : A , x = y -> y = x.
+End Poly1_eqthms.

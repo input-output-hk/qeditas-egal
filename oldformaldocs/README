@@ -1,0 +1,61 @@
+This directory contains the formal documents released with
+the original version of Egal in 2014. Egal can still check these
+documents if it is given the -polyexpand command line arguments.
+
+egal -polyexpand Foundation.mg
+egal -polyexpand PropLogic1.mg
+egal -polyexpand -ind IndexMar2014 -I ExEq1Preamble.mgs ExEq1.mg
+egal -polyexpand -ind IndexMar2014 -I Preds1Preamble.mgs Preds1.mg
+egal -polyexpand -ind IndexMar2014 -I Relns1Preamble.mgs Relns1.mg
+egal -polyexpand -ind IndexMar2014 -I KnasterTarskiPreamble.mgs KnasterTarski.mg
+egal -polyexpand -ind IndexMar2014 -I Relns2Preamble.mgs Relns2.mg
+egal -polyexpand -ind IndexMar2014 -I Classical1Preamble.mgs Classical1.mg
+egal -polyexpand -ind IndexMar2014 -I ConditionalsPreamble.mgs Conditionals.mg
+egal -polyexpand -ind IndexMar2014 -I Exactly1ofPreamble.mgs Exactly1of.mg
+egal -polyexpand -ind IndexMar2014 -I QuotientsPreamble.mgs Quotients.mg
+egal -polyexpand -ind IndexMar2014 -I Zermelo1908Preamble.mgs Zermelo1908.mg
+egal -polyexpand -ind IndexMar2014 -I Set1aPreamble.mgs Set1a.mg
+egal -polyexpand -ind IndexMar2014 -I Set1bPreamble.mgs Set1b.mg
+egal -polyexpand -ind IndexMar2014 -I Set1cPreamble.mgs Set1c.mg
+egal -polyexpand -ind IndexMar2014 -I Set2Preamble.mgs Set2.mg
+egal -polyexpand -ind IndexMar2014 -I EpsIndPreamble.mgs EpsInd.mg
+egal -polyexpand -ind IndexMar2014 -I Nat1Preamble.mgs Nat1.mg
+egal -polyexpand -ind IndexMar2014 -I Nat2Preamble.mgs Nat2.mg
+egal -polyexpand -ind IndexMar2014 -I UnivInfPreamble.mgs UnivInf.mg
+egal -polyexpand -ind IndexMar2014 -I Ordinals1Preamble.mgs Ordinals1.mg
+egal -polyexpand -ind IndexMar2014 -I DisjointUnionsPreamble.mgs DisjointUnions.mg
+egal -polyexpand -ind IndexMar2014 -I OrderedPairsPreamble.mgs OrderedPairs.mg
+egal -polyexpand -ind IndexMar2014 -I DepSumsPreamble.mgs DepSums.mg
+egal -polyexpand -ind IndexMar2014 -I FuncsSetsPreamble.mgs FuncsSets.mg
+egal -polyexpand -ind IndexMar2014 -I DepProdsPreamble.mgs DepProds.mg
+
+egal -polyexpand PropLogic1Problems.mg
+egal -polyexpand -ind IndexMar2014 -I ExEq1Preamble.mgs ExEq1Problems.mg
+egal -polyexpand -ind IndexMar2014 -I Preds1Preamble.mgs Preds1Problems.mg
+egal -polyexpand -ind IndexMar2014 -I Relns1Preamble.mgs Relns1Problems.mg
+egal -polyexpand -ind IndexMar2014 -I KnasterTarskiPreamble.mgs KnasterTarskiProblems.mg
+egal -polyexpand -ind IndexMar2014 -I Relns2Preamble.mgs Relns2Problems.mg
+egal -polyexpand -ind IndexMar2014 -I Classical1Preamble.mgs Classical1Problems.mg
+egal -polyexpand -ind IndexMar2014 -I ConditionalsPreamble.mgs ConditionalsProblems.mg
+egal -polyexpand -ind IndexMar2014 -I Exactly1ofPreamble.mgs Exactly1ofProblems.mg
+egal -polyexpand -ind IndexMar2014 -I QuotientsPreamble.mgs QuotientsProblems.mg
+egal -polyexpand -ind IndexMar2014 -I Zermelo1908Preamble.mgs Zermelo1908Problems.mg
+egal -polyexpand -ind IndexMar2014 -I Set1aPreamble.mgs Set1aProblems.mg
+egal -polyexpand -ind IndexMar2014 -I Set1bPreamble.mgs Set1bProblems.mg
+egal -polyexpand -ind IndexMar2014 -I Set1cPreamble.mgs Set1cProblems.mg
+egal -polyexpand -ind IndexMar2014 -I Set2Preamble.mgs Set2Problems.mg
+egal -polyexpand -ind IndexMar2014 -I EpsIndPreamble.mgs EpsIndProblems.mg
+egal -polyexpand -ind IndexMar2014 -I Nat1Preamble.mgs Nat1Problems.mg
+egal -polyexpand -ind IndexMar2014 -I Nat2Preamble.mgs Nat2Problems.mg
+egal -polyexpand -ind IndexMar2014 -I UnivInfPreamble.mgs UnivInfProblems.mg
+egal -polyexpand -ind IndexMar2014 -I Ordinals1Preamble.mgs Ordinals1Problems.mg
+egal -polyexpand -ind IndexMar2014 -I DisjointUnionsPreamble.mgs DisjointUnionsProblems.mg
+egal -polyexpand -ind IndexMar2014 -I OrderedPairsPreamble.mgs OrderedPairsProblems.mg
+egal -polyexpand -ind IndexMar2014 -I DepSumsPreamble.mgs DepSumsProblems.mg
+egal -polyexpand -ind IndexMar2014 -I FuncsSetsPreamble.mgs FuncsSetsProblems.mg
+egal -polyexpand -ind IndexMar2014 -I DepProdsPreamble.mgs DepProdsProblems.mg
+egal -polyexpand -ind IndexMar2014 -I CategoryPreamble.mgs CategoryProblems.mg
+egal -polyexpand -ind IndexMar2014 -I ModalPreamble.mgs Modal.mg
+egal -polyexpand -ind IndexJune2014 -I GoedelGodPreamble.mgs GoedelGod.mg
+
+egal -polyexpand -ind IndexMar2014 -I CategoryPreamble.mgs CategoryPartialSolns.mg

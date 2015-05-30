@@ -1,0 +1,55 @@
+This directory contains updated versions of the formal documents
+released with the original version of Egal in 2014. The documents are
+mostly the same, but many of the global identifiers needed to be
+changed because Egal no longer expands polymorphic definitions when
+applied to ground types (unless -polyexpand is set).
+In addition all signature files were inlined into the corresponding document,
+eliminating the dependency on a signature.
+
+Alternative versions of the same documents using signatures are in qeditasdocs1.
+
+Here is how Egal can be used to create a theory corresponding to the
+code in Foundation.mg (Higher Order Tarski-Grothendieck Set Theory):
+
+egalqedtheory -qedts tgts Foundation.mg
+
+The result is to create a binary file tgts which Qeditas can interpret as a theory specification.
+Such a theory specification can be part of the output of a Qeditas transaction, which when
+published and confirmed creates the theory.
+
+The *.mg files other than Foundation.mg can be used to create Qeditas documents.
+Here are the appropriate commands.
+
+First start from a fresh index file and fresh files to relate Egal identifiers to Qeditas hashvals.
+
+rm IndexMay2015 egaltoqedtmh egaltoqedknh
+
+Then process the files in order.
+
+egalqeddoc -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout proplogic PropLogic1.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout exeq1 ExEq1.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout preds1 Preds1.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout relns1 Relns1.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout knastertarski KnasterTarski.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout relns2 Relns2.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout classical1 Classical1.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout conditionals Conditionals.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout exactly1of Exactly1of.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout quotients Quotients.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout zermelo1908 Zermelo1908.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout set1a Set1a.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout set1b Set1b.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout set1c Set1c.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout set2 Set2.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout epsind EpsInd.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout nat1 Nat1.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout nat2 Nat2.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout univinf UnivInf.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout ordinals1 Ordinals1.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout disjointunions DisjointUnions.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout orderedpairs OrderedPairs.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout depsums DepSums.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout funcssets FuncsSets.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout depprods DepProds.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout modal Modal.mg
+egalqeddoc -ind IndexMay2015 -indout IndexMay2015 -eqh egaltoqedtmh egaltoqedknh -qeddocout goedelgod GoedelGod.mg

@@ -1,0 +1,57 @@
+(* Title "Preamble Signature for Basic Set Operations" *)
+(* Author "Chad E. Brown" *)
+
+(* Unicode False "22A5" *)
+Definition False : prop := forall P : prop , P.
+Definition not : prop -> prop := fun A : prop => A -> False.
+(* Unicode ~ "00ac" *)
+Prefix ~ 700 := not.
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+(* Unicode /\ "2227" *)
+Infix /\ 780 left  := and.
+Axiom andI : forall A B : prop , A -> B -> A /\ B.
+Definition or : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> P) -> (B -> P) -> P.
+(* Unicode \/ "2228" *)
+Infix \/ 785 left  := or.
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+End Poly1_eq.
+Infix = 502 := eq.
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+Axiom eq_sym : forall x y : A , x = y -> y = x.
+End Poly1_eqthms.
+Axiom prop_ext2 : forall A B : prop , (A -> B) -> (B -> A) -> A = B.
+Axiom NNPP : forall p : prop , ~ ~ p -> p.
+Axiom not_and_or_demorgan : forall A B : prop , ~ (A /\ B) -> ~ A \/ ~ B.
+Axiom eq_imp_or : (fun x y : prop => (x -> y)) = (fun x y : prop => (~ x \/ y)).
+Parameter In : set -> set -> prop.
+Definition nIn : set -> set -> prop := fun x X => ~ In x X.
+(* Unicode /:e "2209" *)
+Infix /:e 502 := nIn.
+Definition Subq : set -> set -> prop := fun X Y => forall x : set , x :e X -> x :e Y.
+Axiom Subq_ref : forall X : set , X c= X.
+Axiom Subq_tra : forall X Y Z : set , X c= Y -> Y c= Z -> X c= Z.
+Axiom Subq_contra : forall X Y z : set , X c= Y -> z /:e Y -> z /:e X.
+Axiom set_ext : forall X Y : set , X c= Y -> Y c= X -> X = Y.
+(* Unicode Empty "2205" *)
+Parameter Empty : set.
+Axiom EmptyE : forall x : set , x /:e Empty.
+Axiom Empty_Subq_eq : forall X : set , X c= Empty -> X = Empty.
+Axiom Empty_eq : forall X : set , (forall x , x /:e X) -> X = Empty.
+(* Parameter binunion MLywQTtJcoNKgztgfTu69bhu4eUuLMxPDoLPPJ551y1WpprR *)
+Parameter binunion : set -> set -> set.
+(* Unicode :\/: "222a" *)
+Infix :\/: 345 left  := binunion.
+Axiom binunionI1 : forall X Y z : set , z :e X -> z :e X :\/: Y.
+Axiom binunionI2 : forall X Y z : set , z :e Y -> z :e X :\/: Y.
+Axiom binunionE : forall X Y z : set , z :e X :\/: Y -> z :e X \/ z :e Y.
+(* Parameter Sep MMUCPW8ve1NeZQSF6QAYrhEzK8uiuz5z6MxqZnhkYVkV3gAE *)
+Parameter Sep : set -> (set -> prop) -> set.
+Notation Sep Sep.
+Axiom SepI : forall X : set , forall P : (set -> prop) , forall x : set , x :e X -> P x -> x :e {x :e X|P x}.
+Axiom SepE : forall X : set , forall P : (set -> prop) , forall x : set , x :e {x :e X|P x} -> x :e X /\ P x.
+Axiom SepE1 : forall X : set , forall P : (set -> prop) , forall x : set , x :e {x :e X|P x} -> x :e X.
+Axiom SepE2 : forall X : set , forall P : (set -> prop) , forall x : set , x :e {x :e X|P x} -> P x.

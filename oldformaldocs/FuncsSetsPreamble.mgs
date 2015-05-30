@@ -1,0 +1,116 @@
+(* Title "Preamble Signature for Functions as Sets" *)
+(* Author "Chad E. Brown" *)
+
+(* Unicode False "22A5" *)
+Definition False : prop := forall P : prop , P.
+Definition not : prop -> prop := fun A : prop => A -> False.
+(* Unicode ~ "00ac" *)
+Prefix ~ 700 := not.
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+(* Unicode /\ "2227" *)
+Infix /\ 780 left  := and.
+Axiom andI : forall A B : prop , A -> B -> A /\ B.
+Definition or : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> P) -> (B -> P) -> P.
+(* Unicode \/ "2228" *)
+Infix \/ 785 left  := or.
+Definition iff : prop -> prop -> prop := fun A B : prop => (A -> B) /\ (B -> A).
+(* Unicode <-> "2194" *)
+Infix <-> 805 := iff.
+Axiom iffI : forall A B : prop , (A -> B) -> (B -> A) -> (A <-> B).
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+Definition neq : A -> A -> prop := fun x y => ~ eq x y.
+End Poly1_eq.
+Infix = 502 := eq.
+(* Unicode <> "2260" *)
+Infix <> 502 := neq.
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+Axiom eq_sym : forall x y : A , x = y -> y = x.
+End Poly1_eqthms.
+Section Poly1_exdef.
+Variable A : SType.
+Variable Q : A -> prop.
+Definition ex : prop := forall P : prop , (forall x : A , Q x -> P) -> P.
+End Poly1_exdef.
+(* Unicode exists "2203" *)
+Binder+ exists , := ex.
+Section Poly1.
+Variable A : SType.
+Axiom exI : forall P : A -> prop , forall x : A , P x -> exists x : A , P x.
+Axiom exandE : forall P Q:A->prop, (exists x : A , P x /\ Q x) -> forall p : prop , (forall x : A , P x -> Q x -> p) -> p.
+End Poly1.
+Section PE.
+Variable A : SType.
+Axiom pred_ext : forall P Q : A -> prop , P c= Q -> Q c= P -> P = Q.
+End PE.
+Section Choice.
+Variable A : SType.
+Parameter Eps : (A -> prop) -> A.
+End Choice.
+Binder some , := Eps.
+Section IfA.
+Variable A : SType.
+Definition If : prop -> A -> A -> A := (fun p x y => some z : A , p /\ z = x \/ ~ p /\ z = y).
+Notation IfThenElse If.
+Axiom If_0 : forall p : prop , forall x y : A , ~ p -> (if p then x else y) = y.
+Axiom If_1 : forall p : prop , forall x y : A , p -> (if p then x else y) = x.
+End IfA.
+Parameter In : set -> set -> prop.
+Definition nIn : set -> set -> prop := fun x X => ~ In x X.
+(* Unicode /:e "2209" *)
+Infix /:e 502 := nIn.
+Definition Subq : set -> set -> prop := fun X Y => forall x : set , x :e X -> x :e Y.
+Binder+ exists , := ex ; and.
+Axiom set_ext : forall X Y : set , X c= Y -> Y c= X -> X = Y.
+(* Unicode Empty "2205" *)
+Parameter Empty : set.
+Axiom Empty_eq : forall X : set , (forall x , x /:e X) -> X = Empty.
+(* Parameter UPair MHANdqNd8qPYjgPJug4t52j3JL41cLUy5KCibeyEq5yq3ytH *)
+Parameter UPair : set -> set -> set.
+Notation SetEnum2 UPair.
+Axiom UPairE : forall x y z : set , x :e {y,z} -> x = y \/ x = z.
+(* Parameter ReplSep MH3YCcpFJ7KL3vGACnmMYpor6so4KFgnSSBfAHDGTrXoSvjn *)
+Parameter ReplSep : set -> (set -> prop) -> (set -> set) -> set.
+Notation ReplSep ReplSep.
+Axiom ReplSepI : forall X : set , forall P : set -> prop , forall F : set -> set , forall x : set , x :e X -> P x -> F x :e {F x|x :e X,P x}.
+Axiom ReplSepE : forall X : set , forall P : set -> prop , forall F : set -> set , forall y : set , y :e {F x|x :e X,P x} -> exists x : set , x :e X /\ P x /\ y = F x.
+Axiom ReplSepE2 : forall X : set , forall P : set -> prop , forall F : set -> set , forall y : set , y :e {F x|x :e X,P x} -> forall p : prop , (forall x :e X , P x -> y = F x -> p) -> p.
+(* Parameter ordsucc MG7MeUQKGRDWGfCpnv4BBfwuRumr4R1ngnkoEgKgz7jpCB6E *)
+Parameter ordsucc : set -> set.
+Notation Nat Empty ordsucc.
+Axiom In_1_2 : 1 :e 2.
+Axiom In_0_2 : 0 :e 2.
+Axiom neq_1_0 : 1 <> 0.
+Axiom Subq_2_UPair01 : 2 c= {0,1}.
+(* Parameter pair MKKGnKnC1quGLGnWpwB65MgQ7bPbCPc48zaQUdmq8s3fSrjf*)
+Parameter pair : set -> set -> set.
+(* Parameter proj0 MFyRcUPX2NP5ybfB4nRBP1Qep5PLtiiKiZ1Gdp88o6P1ZkyY*)
+Parameter proj0 : set -> set.
+(* Parameter proj1 MH32QAUUM5x9B19qpurqyd6qWAZAvcuDRwBRRjQdX94j6fH2*)
+Parameter proj1 : set -> set.
+Axiom pairI0 : forall X Y x , x :e X -> pair 0 x :e pair X Y.
+Axiom pairI1 : forall X Y y , y :e Y -> pair 1 y :e pair X Y.
+Axiom pairE : forall X Y z , z :e pair X Y -> (exists x :e X , z = pair 0 x) \/ (exists y :e Y , z = pair 1 y).
+Axiom proj0I : forall w u : set , pair 0 u :e w -> u :e proj0 w.
+Axiom proj0E : forall w u : set , u :e proj0 w -> pair 0 u :e w.
+Axiom proj1I : forall w u : set , pair 1 u :e w -> u :e proj1 w.
+Axiom proj1E : forall w u : set , u :e proj1 w -> pair 1 u :e w.
+Axiom proj0_pair_eq : forall X Y : set , proj0 (pair X Y) = X.
+Axiom proj1_pair_eq : forall X Y : set , proj1 (pair X Y) = Y.
+Axiom pair_inj : forall x y w z : set , pair x y = pair w z -> x = w /\ y = z.
+Axiom pair_eta_Subq_proj : forall w , pair (proj0 w) (proj1 w) c= w.
+(* Parameter Sigma MGNw2qbBL6u6B4yyFAmQMbqdhyHwqynrhYepMxjLsK829eTU*)
+Parameter Sigma : set -> (set -> set) -> set.
+(* Unicode Sigma_ "2211" *)
+Binder+ Sigma_ , := Sigma.
+Axiom pair_Sigma : forall X : set , forall Y : set -> set , forall x :e X , forall y :e Y x , pair x y :e Sigma_ x :e X , Y x.
+Axiom proj_Sigma_eta : forall X : set , forall Y : set -> set , forall z :e (Sigma_ x :e X , Y x) , pair (proj0 z) (proj1 z) = z.
+Axiom proj0_Sigma : forall X : set , forall Y : set -> set , forall z : set , z :e (Sigma_ x :e X , Y x) -> proj0 z :e X.
+Axiom proj1_Sigma : forall X : set , forall Y : set -> set , forall z : set , z :e (Sigma_ x :e X , Y x) -> proj1 z :e Y (proj0 z).
+Axiom pair_Sigma_E0 : forall X : set , forall Y : set -> set , forall x y : set , pair x y :e (Sigma_ x :e X , Y x) -> x :e X.
+Axiom pair_Sigma_E1 : forall X : set , forall Y : set -> set , forall x y : set , pair x y :e (Sigma_ x :e X , Y x) -> y :e Y x.
+Axiom Sigma_E : forall X : set , forall Y : set -> set , forall z : set , z :e (Sigma_ x :e X , Y x) -> exists x :e X , exists y :e Y x , z = pair x y.
+Axiom Sigma_Eq : forall X : set , forall Y : set -> set , forall z : set , z :e (Sigma_ x :e X , Y x) <-> exists x :e X , exists y :e Y x , z = pair x y.

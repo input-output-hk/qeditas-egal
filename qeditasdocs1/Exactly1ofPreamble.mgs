@@ -1,0 +1,28 @@
+(* Title "Preamble Signature for Exactly 1 of 2 or 3" *)
+(* Author "Chad E. Brown" *)
+
+(* Unicode False "22A5" *)
+Definition False : prop := forall P : prop , P.
+Axiom FalseE : forall P : prop , False -> P.
+Definition not : prop -> prop := fun A : prop => A -> False.
+(* Unicode ~ "00ac" *)
+Prefix ~ 700 := not.
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+(* Unicode /\ "2227" *)
+Infix /\ 780 left  := and.
+Axiom andI : forall A B : prop , A -> B -> A /\ B.
+Definition or : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> P) -> (B -> P) -> P.
+(* Unicode \/ "2228" *)
+Infix \/ 785 left  := or.
+Axiom orIL : forall A B : prop , A -> A \/ B.
+Axiom orIR : forall A B : prop , B -> A \/ B.
+Section PropN.
+Variable P1 P2 P3 : prop.
+Axiom and3I : P1 -> P2 -> P3 -> P1 /\ P2 /\ P3.
+Axiom and3E : P1 /\ P2 /\ P3 -> (forall p : prop , (P1 -> P2 -> P3 -> p) -> p).
+Axiom or3I1 : P1 -> P1 \/ P2 \/ P3.
+Axiom or3I2 : P2 -> P1 \/ P2 \/ P3.
+Axiom or3I3 : P3 -> P1 \/ P2 \/ P3.
+Axiom or3E : P1 \/ P2 \/ P3 -> (forall p : prop , (P1 -> p) -> (P2 -> p) -> (P3 -> p) -> p).
+End PropN.
+Axiom classic : forall P : prop , P \/ ~ P.

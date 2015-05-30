@@ -1,0 +1,179 @@
+
+opt: bin/egalqeddoc bin/egalqedtheory bin/egal
+
+bytecode: bin/egal.bytecode bin/egalqedtheory.bytecode bin/egal.bytecode
+
+bin/egal: bin/config.cmx bin/secp256k1.cmx bin/cryptocurr.cmx bin/hash.cmx bin/lexer.cmx bin/interpret.cmx bin/mgcheck.cmx
+	$(OCAMLOPT) -o bin/egal unix.cmxa nums.cmxa bin/config.cmx bin/secp256k1.cmx bin/cryptocurr.cmx bin/hash.cmx bin/syntax.cmx bin/parser.cmx bin/lexer.cmx bin/interpret.cmx bin/axioms.cmx bin/mgcheck.cmx
+
+bin/egalqedtheory: bin/config.cmx bin/secp256k1.cmx bin/cryptocurr.cmx bin/hash.cmx bin/syntax.cmx bin/parser.cmx bin/lexer.cmx bin/interpret.cmx bin/qser.cmx bin/qhashaux.cmx bin/qsha256.cmx bin/qripemd160.cmx bin/qhash.cmx bin/qsyntax.cmx bin/qeditasoutput.cmx bin/egalqedtheory.cmx
+	$(OCAMLOPT) -o bin/egalqedtheory unix.cmxa nums.cmxa bin/config.cmx bin/secp256k1.cmx bin/cryptocurr.cmx bin/hash.cmx bin/syntax.cmx bin/parser.cmx bin/lexer.cmx bin/interpret.cmx bin/qser.cmx bin/qhashaux.cmx bin/qsha256.cmx bin/qripemd160.cmx bin/qhash.cmx bin/qsyntax.cmx bin/qeditasoutput.cmx bin/axioms.cmx bin/egalqedtheory.cmx
+
+bin/egalqeddoc: bin/config.cmx bin/secp256k1.cmx bin/cryptocurr.cmx bin/hash.cmx bin/syntax.cmx bin/parser.cmx bin/lexer.cmx bin/interpret.cmx bin/qser.cmx bin/qhashaux.cmx bin/qsha256.cmx bin/qripemd160.cmx bin/qhash.cmx bin/qsyntax.cmx bin/qeditasoutput.cmx bin/egalqeddoc.cmx
+	$(OCAMLOPT) -o bin/egalqeddoc unix.cmxa nums.cmxa bin/config.cmx bin/secp256k1.cmx bin/cryptocurr.cmx bin/hash.cmx bin/syntax.cmx bin/parser.cmx bin/lexer.cmx bin/interpret.cmx bin/qser.cmx bin/qhashaux.cmx bin/qsha256.cmx bin/qripemd160.cmx bin/qhash.cmx bin/qsyntax.cmx bin/qeditasoutput.cmx bin/axioms.cmx bin/egalqeddoc.cmx
+
+bin/egal.bytecode: bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/lexer.cmo bin/interpret.cmo bin/mgcheck.cmo
+	$(OCAMLC) -o bin/egal.bytecode unix.cma nums.cma bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/syntax.cmo bin/parser.cmo bin/lexer.cmo bin/interpret.cmo bin/axioms.cmo bin/mgcheck.cmo
+
+bin/egalqedtheory.bytecode: bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/syntax.cmo bin/parser.cmo bin/lexer.cmo bin/interpret.cmo bin/qser.cmo bin/qhashaux.cmo bin/qsha256.cmo bin/qripemd160.cmo bin/qhash.cmo bin/qsyntax.cmo bin/qeditasoutput.cmo bin/egalqedtheory.cmo
+	$(OCAMLC) -o bin/egalqedtheory.bytecode unix.cma nums.cma bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/syntax.cmo bin/parser.cmo bin/lexer.cmo bin/interpret.cmo bin/qser.cmo bin/qhashaux.cmo bin/qsha256.cmo bin/qripemd160.cmo bin/qhash.cmo bin/qsyntax.cmo bin/qeditasoutput.cmo bin/axioms.cmo bin/egalqedtheory.cmo
+
+bin/egalqeddoc.bytecode: bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/syntax.cmo bin/parser.cmo bin/lexer.cmo bin/interpret.cmo bin/qser.cmo bin/qhashaux.cmo bin/qsha256.cmo bin/qripemd160.cmo bin/qhash.cmo bin/qsyntax.cmo bin/qeditasoutput.cmo bin/egalqeddoc.cmo
+	$(OCAMLC) -o bin/egalqeddoc.bytecode unix.cma nums.cma bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/syntax.cmo bin/parser.cmo bin/lexer.cmo bin/interpret.cmo bin/qser.cmo bin/qhashaux.cmo bin/qsha256.cmo bin/qripemd160.cmo bin/qhash.cmo bin/qsyntax.cmo bin/qeditasoutput.cmo bin/axioms.cmo bin/egalqeddoc.cmo
+
+bin/config.cmo: src/config.ml bin/config.cmi
+	$(OCAMLC) -I bin -o bin/config.cmo nums.cma -c src/config.ml
+
+bin/secp256k1.cmo: src/secp256k1.ml bin/secp256k1.cmi
+	$(OCAMLC) -I bin -o bin/secp256k1.cmo nums.cma -c src/secp256k1.ml
+
+bin/cryptocurr.cmo: src/cryptocurr.ml bin/cryptocurr.cmi bin/secp256k1.cmo
+	$(OCAMLC) -I bin -o bin/cryptocurr.cmo nums.cma -c src/cryptocurr.ml
+
+bin/hash.cmo: src/hash.ml bin/cryptocurr.cmo bin/hash.cmi
+	$(OCAMLC) -I bin -o bin/hash.cmo nums.cma -c src/hash.ml
+
+bin/syntax.cmo: src/syntax.ml bin/syntax.cmi
+	$(OCAMLC) -I bin -o bin/syntax.cmo nums.cma -c src/syntax.ml
+
+bin/parser.cmo: src/parser.ml bin/syntax.cmo bin/parser.cmi
+	$(OCAMLC) -I bin -o bin/parser.cmo nums.cma -c src/parser.ml
+
+bin/lexer.cmo: src/lexer.ml bin/parser.cmo
+	$(OCAMLC) -I bin -o bin/lexer.cmo -c src/lexer.ml
+
+bin/interpret.cmo: src/interpret.ml bin/parser.cmo bin/interpret.cmi
+	$(OCAMLC) -I bin -o bin/interpret.cmo nums.cma -c src/interpret.ml
+
+bin/axioms.cmo : src/axioms.ml
+	$(OCAMLC) -I bin -o bin/axioms.cmo -c src/axioms.ml
+
+bin/mgcheck.cmo: src/mgcheck.ml bin/interpret.cmo bin/axioms.cmo
+	$(OCAMLC) -I bin -o bin/mgcheck.cmo -c src/mgcheck.ml
+
+bin/qser.cmo: bin/qser.cmi src/qeditas/qser.ml
+	$(OCAMLC) -I bin -o bin/qser.cmo -c src/qeditas/qser.ml
+
+bin/qhashaux.cmo: bin/qhashaux.cmi src/qeditas/qhashaux.ml
+	$(OCAMLC) -I bin -o bin/qhashaux.cmo -c src/qeditas/qhashaux.ml
+
+bin/qsha256.cmo: bin/qsha256.cmi src/qeditas/qsha256.ml bin/qhashaux.cmo
+	$(OCAMLC) -I bin -o bin/qsha256.cmo -c src/qeditas/qsha256.ml
+
+bin/qripemd160.cmo: bin/qripemd160.cmi src/qeditas/qripemd160.ml bin/qhashaux.cmo
+	$(OCAMLC) -I bin -o bin/qripemd160.cmo -c src/qeditas/qripemd160.ml
+
+bin/qhash.cmo: bin/qhash.cmi src/qeditas/qhash.ml bin/qripemd160.cmo bin/qsha256.cmo
+	$(OCAMLC) -I bin -o bin/qhash.cmo -c src/qeditas/qhash.ml
+
+bin/qsyntax.cmo: src/qeditas/qsyntax.ml bin/qhash.cmo bin/qser.cmo
+	$(OCAMLC) -I bin -o bin/qsyntax.cmo -c src/qeditas/qsyntax.ml
+
+bin/qeditasoutput.cmo: src/qeditas/qeditasoutput.ml bin/syntax.cmo bin/qsyntax.cmo
+	$(OCAMLC) -I bin -o bin/qeditasoutput.cmo -c src/qeditas/qeditasoutput.ml
+
+bin/egalqedtheory.cmo : src/egalqedtheory.ml bin/qeditasoutput.cmo bin/qsyntax.cmo bin/lexer.cmo bin/interpret.cmo bin/axioms.cmo
+	$(OCAMLC) -I bin -o bin/egalqedtheory.cmo -c src/egalqedtheory.ml
+
+bin/egalqeddoc.cmo : src/egalqeddoc.ml bin/qeditasoutput.cmo bin/qsyntax.cmo bin/lexer.cmo bin/interpret.cmo bin/axioms.cmo
+	$(OCAMLC) -I bin -o bin/egalqeddoc.cmo -c src/egalqeddoc.ml
+
+bin/config.cmx: src/config.ml bin/config.cmi
+	$(OCAMLOPT) -I bin -o bin/config.cmx nums.cmxa -c src/config.ml
+
+bin/secp256k1.cmx: src/secp256k1.ml bin/secp256k1.cmi
+	$(OCAMLOPT) -I bin -o bin/secp256k1.cmx nums.cmxa -c src/secp256k1.ml
+
+bin/cryptocurr.cmx: src/cryptocurr.ml bin/cryptocurr.cmi bin/secp256k1.cmx
+	$(OCAMLOPT) -I bin -o bin/cryptocurr.cmx nums.cmxa -c src/cryptocurr.ml
+
+bin/hash.cmx: src/hash.ml bin/cryptocurr.cmx bin/hash.cmi
+	$(OCAMLOPT) -I bin -o bin/hash.cmx nums.cmxa -c src/hash.ml
+
+bin/syntax.cmx: src/syntax.ml bin/syntax.cmi
+	$(OCAMLOPT) -I bin -o bin/syntax.cmx nums.cmxa -c src/syntax.ml
+
+bin/parser.cmx: src/parser.ml bin/syntax.cmx bin/parser.cmi
+	$(OCAMLOPT) -I bin -o bin/parser.cmx nums.cmxa -c src/parser.ml
+
+bin/lexer.cmx: src/lexer.ml bin/parser.cmx
+	$(OCAMLOPT) -I bin -o bin/lexer.cmx -c src/lexer.ml
+
+bin/interpret.cmx: src/interpret.ml bin/parser.cmx bin/interpret.cmi
+	$(OCAMLOPT) -I bin -o bin/interpret.cmx nums.cmxa -c src/interpret.ml
+
+bin/axioms.cmx : src/axioms.ml
+	$(OCAMLOPT) -I bin -o bin/axioms.cmx -c src/axioms.ml
+
+bin/mgcheck.cmx: src/mgcheck.ml bin/interpret.cmx bin/axioms.cmx
+	$(OCAMLOPT) -I bin -o bin/mgcheck.cmx -c src/mgcheck.ml
+
+bin/qser.cmx: bin/qser.cmi src/qeditas/qser.ml
+	$(OCAMLOPT) -I bin -o bin/qser.cmx -c src/qeditas/qser.ml
+
+bin/qhashaux.cmx: bin/qhashaux.cmi src/qeditas/qhashaux.ml
+	$(OCAMLOPT) -I bin -o bin/qhashaux.cmx -c src/qeditas/qhashaux.ml
+
+bin/qsha256.cmx: bin/qsha256.cmi src/qeditas/qsha256.ml bin/qhashaux.cmx
+	$(OCAMLOPT) -I bin -o bin/qsha256.cmx -c src/qeditas/qsha256.ml
+
+bin/qripemd160.cmx: bin/qripemd160.cmi src/qeditas/qripemd160.ml bin/qhashaux.cmx
+	$(OCAMLOPT) -I bin -o bin/qripemd160.cmx -c src/qeditas/qripemd160.ml
+
+bin/qhash.cmx: bin/qhash.cmi src/qeditas/qhash.ml bin/qripemd160.cmx bin/qsha256.cmx
+	$(OCAMLOPT) -I bin -o bin/qhash.cmx -c src/qeditas/qhash.ml
+
+bin/qsyntax.cmx: src/qeditas/qsyntax.ml bin/qhash.cmx bin/qser.cmx
+	$(OCAMLOPT) -I bin -o bin/qsyntax.cmx -c src/qeditas/qsyntax.ml
+
+bin/qeditasoutput.cmx: src/qeditas/qeditasoutput.ml bin/syntax.cmx bin/qsyntax.cmx
+	$(OCAMLOPT) -I bin -o bin/qeditasoutput.cmx -c src/qeditas/qeditasoutput.ml
+
+bin/egalqedtheory.cmx : src/egalqedtheory.ml bin/qeditasoutput.cmx bin/qsyntax.cmx bin/lexer.cmx bin/interpret.cmx bin/axioms.cmx
+	$(OCAMLOPT) -I bin -o bin/egalqedtheory.cmx -c src/egalqedtheory.ml
+
+bin/egalqeddoc.cmx : src/egalqeddoc.ml bin/qeditasoutput.cmx bin/qsyntax.cmx bin/lexer.cmx bin/interpret.cmx bin/axioms.cmx
+	$(OCAMLOPT) -I bin -o bin/egalqeddoc.cmx -c src/egalqeddoc.ml
+
+src/lexer.ml : src/lexer.mll
+	$(OCAMLLEX) src/lexer.mll
+
+bin/config.cmi: src/config.mli
+	$(OCAMLC) -I bin -o bin/config.cmi -c src/config.mli
+
+bin/secp256k1.cmi: src/secp256k1.mli
+	$(OCAMLC) -I bin -o bin/secp256k1.cmi -c src/secp256k1.mli
+
+bin/cryptocurr.cmi: src/cryptocurr.mli bin/secp256k1.cmi
+	$(OCAMLC) -I bin -o bin/cryptocurr.cmi -c src/cryptocurr.mli
+
+bin/hash.cmi: src/hash.mli
+	$(OCAMLC) -I bin -o bin/hash.cmi -c src/hash.mli
+
+bin/syntax.cmi: src/syntax.mli
+	$(OCAMLC) -I bin -o bin/syntax.cmi -c src/syntax.mli
+
+bin/parser.cmi: src/parser.mli bin/syntax.cmi
+	$(OCAMLC) -I bin -o bin/parser.cmi -c src/parser.mli
+
+bin/interpret.cmi: src/interpret.mli bin/syntax.cmi
+	$(OCAMLC) -I bin -o bin/interpret.cmi -c src/interpret.mli
+
+bin/qser.cmi: src/qeditas/qser.mli
+	$(OCAMLC) -I bin -o bin/qser.cmi -c src/qeditas/qser.mli
+
+bin/qhashaux.cmi: src/qeditas/qhashaux.mli
+	$(OCAMLC) -I bin -o bin/qhashaux.cmi -c src/qeditas/qhashaux.mli
+
+bin/qsha256.cmi: src/qeditas/qsha256.mli
+	$(OCAMLC) -I bin -o bin/qsha256.cmi -c src/qeditas/qsha256.mli
+
+bin/qripemd160.cmi: src/qeditas/qripemd160.mli
+	$(OCAMLC) -I bin -o bin/qripemd160.cmi -c src/qeditas/qripemd160.mli
+
+bin/qhash.cmi: src/qeditas/qhash.mli
+	$(OCAMLC) -I bin -o bin/qhash.cmi -c src/qeditas/qhash.mli
+
+clean:
+	rm bin/* src/lexer.ml
+

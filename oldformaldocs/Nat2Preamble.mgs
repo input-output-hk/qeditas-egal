@@ -1,0 +1,59 @@
+(* Title "Preamble Signature for Arithmetic on the Natural Numbers" *)
+(* Author "Chad E. Brown" *)
+
+(* Unicode False "22A5" *)
+Definition False : prop := forall P : prop , P.
+Definition not : prop -> prop := fun A : prop => A -> False.
+(* Unicode ~ "00ac" *)
+Prefix ~ 700 := not.
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+(* Unicode /\ "2227" *)
+Infix /\ 780 left  := and.
+Definition or : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> P) -> (B -> P) -> P.
+(* Unicode \/ "2228" *)
+Infix \/ 785 left  := or.
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+End Poly1_eq.
+Infix = 502 := eq.
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+Axiom eq_sym : forall x y : A , x = y -> y = x.
+End Poly1_eqthms.
+Section Choice.
+Variable A : SType.
+Parameter Eps : (A -> prop) -> A.
+End Choice.
+Binder some , := Eps.
+Axiom classic : forall P : prop , P \/ ~ P.
+Section IfA.
+Variable A : SType.
+Definition If : prop -> A -> A -> A := (fun p x y => some z : A , p /\ z = x \/ ~ p /\ z = y).
+Notation IfThenElse If.
+Axiom If_0 : forall p : prop , forall x y : A , ~ p -> (if p then x else y) = y.
+Axiom If_1 : forall p : prop , forall x y : A , p -> (if p then x else y) = x.
+End IfA.
+Parameter In : set -> set -> prop.
+Definition nIn : set -> set -> prop := fun x X => ~ In x X.
+(* Unicode /:e "2209" *)
+Infix /:e 502 := nIn.
+(* Unicode Empty "2205" *)
+Parameter Empty : set.
+Axiom EmptyE : forall x : set , x /:e Empty.
+(* Unicode Union "22C3" *)
+Parameter Union : set -> set.
+(* Parameter In_rec MKXFGSBfXZpd7xrb87BY7kHprE19yeifa8XHagUckHSeVMSW*)
+Parameter In_rec : (set -> (set -> set) -> set) -> set -> set.
+Axiom In_rec_eq : forall F : set -> (set -> set) -> set , (forall X : set , forall g h : set -> set , (forall x , x :e X -> g x = h x) -> F X g = F X h) -> forall X : set , In_rec F X = F X (In_rec F).
+(* Parameter ordsucc MG7MeUQKGRDWGfCpnv4BBfwuRumr4R1ngnkoEgKgz7jpCB6E *)
+Parameter ordsucc : set -> set.
+Axiom ordsuccI2 : forall x : set , x :e ordsucc x.
+Axiom ordsuccE : forall x y : set , y :e ordsucc x -> y :e x \/ y = x.
+Notation Nat Empty ordsucc.
+Definition nat_p : set -> prop := fun n : set => forall p : set -> prop , p 0 -> (forall x : set , p x -> p (ordsucc x)) -> p n.
+Axiom nat_0 : nat_p 0.
+Axiom nat_ordsucc : forall n : set , nat_p n -> nat_p (ordsucc n).
+Axiom nat_ind : forall p : set -> prop , p 0 -> (forall n , nat_p n -> p n -> p (ordsucc n)) -> forall n , nat_p n -> p n.
+Axiom Union_ordsucc_eq : forall n , nat_p n -> Union (ordsucc n) = n.

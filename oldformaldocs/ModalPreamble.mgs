@@ -1,0 +1,74 @@
+(***
+ This is a preamble file collecting a few basic logic definitions and results I need in Modal.
+***)
+Definition False : prop := forall P : prop , P.
+(* Unicode False "22A5" *)
+
+Definition True : prop := forall P : prop , P -> P.
+(* Unicode True "22A4" *)
+Axiom TrueI : True.
+
+Definition not : prop -> prop := fun A : prop => A -> False.
+Prefix ~ 700 := not.
+
+Definition and : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> B -> P) -> P.
+Infix /\ 780 left  := and.
+Axiom andI : forall A B : prop , A -> B -> A /\ B.
+Axiom andEL : forall A B : prop , A /\ B -> A.
+Axiom andER : forall A B : prop , A /\ B -> B.
+
+Definition or : prop -> prop -> prop := fun A B : prop => forall P : prop , (A -> P) -> (B -> P) -> P.
+Infix \/ 785 left  := or.
+Axiom orIL : forall A B : prop , A -> A \/ B.
+Axiom orIR : forall A B : prop , B -> A \/ B.
+Axiom orE : forall A B C : prop , (A -> C) -> (B -> C) -> A \/ B -> C.
+
+Definition iff : prop -> prop -> prop := fun A B : prop => (A -> B) /\ (B -> A).
+Infix <-> 795 := iff.
+
+Section Poly1_eq.
+Variable A : SType.
+Definition eq : A -> A -> prop := fun x y => forall Q : A -> prop , Q x -> Q y.
+Definition neq : A -> A -> prop := fun x y => ~ eq x y.
+End Poly1_eq.
+Infix = 502 := eq.
+Infix <> 502 := neq.
+Section Poly1_eqthms.
+Variable A : SType.
+Axiom eqI : forall x : A , x = x.
+Axiom eq_sym : forall x y : A , x = y -> y = x.
+End Poly1_eqthms.
+Section Poly1_exdef.
+Variable A : SType.
+Variable Q : A -> prop.
+Definition ex : prop := forall P : prop , (forall x : A , Q x -> P) -> P.
+End Poly1_exdef.
+Binder+ exists , := ex.
+Section Poly1_exthms.
+Variable A : SType.
+Axiom exI : forall P : A -> prop , forall x : A , P x -> exists x : A , P x.
+End Poly1_exthms.
+Section Poly1.
+Variable A : SType.
+Variable P : A -> prop.
+Variable Q : A -> prop.
+Axiom exandE : (exists x : A , P x /\ Q x) -> forall p : prop , (forall x : A , P x -> Q x -> p) -> p.
+End Poly1.
+
+Axiom classic : forall P : prop , P \/ ~ P.
+Axiom NNPP : forall p : prop , ~ ~ p -> p.
+
+Section RelnPoly1.
+Variable A:SType.
+Definition symmetric : (A->A->prop)->prop := fun R => forall x y:A, R x y -> R y x.
+Definition transitive : (A->A->prop)->prop := fun R => forall x y z:A, R x y -> R y z -> R x z.
+Definition per : (A->A->prop)->prop := fun R => symmetric R /\ transitive R.
+Axiom per_sym : forall R : A -> A -> prop , per R -> symmetric R.
+Axiom per_tra : forall R : A -> A -> prop , per R -> transitive R.
+Axiom per_stra1 : forall R : A -> A -> prop , per R -> forall x y z : A , R y x -> R y z -> R x z.
+Axiom per_stra2 : forall R : A -> A -> prop , per R -> forall x y z : A , R x y -> R z y -> R x z.
+Axiom per_stra3 : forall R : A -> A -> prop , per R -> forall x y z : A , R y x -> R z y -> R x z.
+Axiom per_ref1 : forall R : A -> A -> prop , per R -> forall x y : A , R x y -> R x x.
+Axiom per_ref2 : forall R : A -> A -> prop , per R -> forall x y : A , R x y -> R y y.
+End RelnPoly1.
+
