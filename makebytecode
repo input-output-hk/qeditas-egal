@@ -42,7 +42,7 @@ $OCAMLC -I bin -o bin/interpret.cmi -c src/interpret.mli
 $OCAMLC -I bin -o bin/interpret.cmo nums.cma -c src/interpret.ml
 $OCAMLC -I bin -o bin/axioms.cmo nums.cma -c src/axioms.ml
 $OCAMLC -I bin -o bin/mgcheck.cmo -c src/mgcheck.ml
-$OCAMLC -o bin/egal.bytecode unix.cma nums.cma bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/syntax.cmo bin/parser.cmo bin/lexer.cmo bin/interpret.cmo bin/axioms.cmo bin/mgcheck.cmo
+$OCAMLC -o bin/egal unix.cma nums.cma bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/syntax.cmo bin/parser.cmo bin/lexer.cmo bin/interpret.cmo bin/axioms.cmo bin/mgcheck.cmo
 # Qeditas code
 $OCAMLC -I bin -o bin/qser.cmi -c src/qeditas/qser.mli
 $OCAMLC -I bin -o bin/qser.cmo -c src/qeditas/qser.ml
@@ -57,7 +57,7 @@ $OCAMLC -I bin -o bin/qhash.cmo -c src/qeditas/qhash.ml
 $OCAMLC -I bin -o bin/qsyntax.cmo -c src/qeditas/qsyntax.ml
 $OCAMLC -I bin -o bin/qeditasoutput.cmo -c src/qeditas/qeditasoutput.ml
 $OCAMLC -I bin -o bin/egalqedtheory.cmo -c src/egalqedtheory.ml
-$OCAMLC -o bin/egalqedtheory.bytecode unix.cma nums.cma bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/syntax.cmo bin/parser.cmo bin/lexer.cmo bin/interpret.cmo bin/qser.cmo bin/qhashaux.cmo bin/qsha256.cmo bin/qripemd160.cmo bin/qhash.cmo bin/qsyntax.cmo bin/qeditasoutput.cmo bin/axioms.cmo bin/egalqedtheory.cmo
+$OCAMLC -o bin/egalqedtheory unix.cma nums.cma bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/syntax.cmo bin/parser.cmo bin/lexer.cmo bin/interpret.cmo bin/qser.cmo bin/qhashaux.cmo bin/qsha256.cmo bin/qripemd160.cmo bin/qhash.cmo bin/qsyntax.cmo bin/qeditasoutput.cmo bin/axioms.cmo bin/egalqedtheory.cmo
 $OCAMLC -I bin -o bin/egalqeddoc.cmo -c src/egalqeddoc.ml
-$OCAMLC -o bin/egalqeddoc.bytecode unix.cma nums.cma bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/syntax.cmo bin/parser.cmo bin/lexer.cmo bin/interpret.cmo bin/qser.cmo bin/qhashaux.cmo bin/qsha256.cmo bin/qripemd160.cmo bin/qhash.cmo bin/qsyntax.cmo bin/qeditasoutput.cmo bin/axioms.cmo bin/egalqeddoc.cmo
+$OCAMLC -o bin/egalqeddoc unix.cma nums.cma bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/syntax.cmo bin/parser.cmo bin/lexer.cmo bin/interpret.cmo bin/qser.cmo bin/qhashaux.cmo bin/qsha256.cmo bin/qripemd160.cmo bin/qhash.cmo bin/qsyntax.cmo bin/qeditasoutput.cmo bin/axioms.cmo bin/egalqeddoc.cmo
 

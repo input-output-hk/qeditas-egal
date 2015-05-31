@@ -3,7 +3,7 @@ opt: bin/egalqeddoc bin/egalqedtheory bin/egal
 
 bytecode: bin/egal.bytecode bin/egalqedtheory.bytecode bin/egal.bytecode
 
-bin/egal: bin/config.cmx bin/secp256k1.cmx bin/cryptocurr.cmx bin/hash.cmx bin/lexer.cmx bin/interpret.cmx bin/mgcheck.cmx
+bin/egal: bin/config.cmx bin/secp256k1.cmx bin/cryptocurr.cmx bin/hash.cmx bin/lexer.cmx bin/interpret.cmx bin/axioms.cmx bin/mgcheck.cmx
 	$(OCAMLOPT) -o bin/egal unix.cmxa nums.cmxa bin/config.cmx bin/secp256k1.cmx bin/cryptocurr.cmx bin/hash.cmx bin/syntax.cmx bin/parser.cmx bin/lexer.cmx bin/interpret.cmx bin/axioms.cmx bin/mgcheck.cmx
 
 bin/egalqedtheory: bin/config.cmx bin/secp256k1.cmx bin/cryptocurr.cmx bin/hash.cmx bin/syntax.cmx bin/parser.cmx bin/lexer.cmx bin/interpret.cmx bin/qser.cmx bin/qhashaux.cmx bin/qsha256.cmx bin/qripemd160.cmx bin/qhash.cmx bin/qsyntax.cmx bin/qeditasoutput.cmx bin/egalqedtheory.cmx
@@ -12,7 +12,7 @@ bin/egalqedtheory: bin/config.cmx bin/secp256k1.cmx bin/cryptocurr.cmx bin/hash.
 bin/egalqeddoc: bin/config.cmx bin/secp256k1.cmx bin/cryptocurr.cmx bin/hash.cmx bin/syntax.cmx bin/parser.cmx bin/lexer.cmx bin/interpret.cmx bin/qser.cmx bin/qhashaux.cmx bin/qsha256.cmx bin/qripemd160.cmx bin/qhash.cmx bin/qsyntax.cmx bin/qeditasoutput.cmx bin/egalqeddoc.cmx
 	$(OCAMLOPT) -o bin/egalqeddoc unix.cmxa nums.cmxa bin/config.cmx bin/secp256k1.cmx bin/cryptocurr.cmx bin/hash.cmx bin/syntax.cmx bin/parser.cmx bin/lexer.cmx bin/interpret.cmx bin/qser.cmx bin/qhashaux.cmx bin/qsha256.cmx bin/qripemd160.cmx bin/qhash.cmx bin/qsyntax.cmx bin/qeditasoutput.cmx bin/axioms.cmx bin/egalqeddoc.cmx
 
-bin/egal.bytecode: bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/lexer.cmo bin/interpret.cmo bin/mgcheck.cmo
+bin/egal.bytecode: bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/lexer.cmo bin/interpret.cmo bin/axioms.cmo bin/mgcheck.cmo
 	$(OCAMLC) -o bin/egal.bytecode unix.cma nums.cma bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/syntax.cmo bin/parser.cmo bin/lexer.cmo bin/interpret.cmo bin/axioms.cmo bin/mgcheck.cmo
 
 bin/egalqedtheory.bytecode: bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/syntax.cmo bin/parser.cmo bin/lexer.cmo bin/interpret.cmo bin/qser.cmo bin/qhashaux.cmo bin/qsha256.cmo bin/qripemd160.cmo bin/qhash.cmo bin/qsyntax.cmo bin/qeditasoutput.cmo bin/egalqedtheory.cmo
