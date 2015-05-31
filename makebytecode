@@ -1,0 +1,63 @@
+#!/bin/bash
+
+OPENSSL=`which openssl`
+if [ -z $OPENSSL ]; then
+    echo 'Could not find openssl'
+    echo 'makebytecode failed'
+    exit 1
+fi
+
+echo let openssl_exec = \"$OPENSSL\" > src/config.ml
+
+OCAMLC=`which ocamlc`
+if [ -z $OCAMLC ]; then
+    echo 'Could not find ocamlc'
+    echo 'makebytecode failed'
+    exit 1
+fi
+
+OCAMLLEX=ocamllex
+if [ -z $OCAMLLEX ]; then
+    echo 'Could not find ocamllex'
+    echo 'makebytecode failed'
+    exit 1
+fi
+
+$OCAMLLEX src/lexer.mll
+
+$OCAMLC -I bin -o bin/config.cmi -c src/config.mli
+$OCAMLC -I bin -o bin/config.cmo -c src/config.ml
+$OCAMLC -I bin -o bin/secp256k1.cmi -c src/secp256k1.mli
+$OCAMLC -I bin -o bin/secp256k1.cmo nums.cma -c src/secp256k1.ml
+$OCAMLC -I bin -o bin/cryptocurr.cmi -c src/cryptocurr.mli
+$OCAMLC -I bin -o bin/cryptocurr.cmo nums.cma -c src/cryptocurr.ml
+$OCAMLC -I bin -o bin/hash.cmi -c src/hash.mli
+$OCAMLC -I bin -o bin/hash.cmo nums.cma -c src/hash.ml
+$OCAMLC -I bin -o bin/syntax.cmi -c src/syntax.mli
+$OCAMLC -I bin -o bin/syntax.cmo nums.cma -c src/syntax.ml
+$OCAMLC -I bin -o bin/parser.cmi -c src/parser.mli
+$OCAMLC -I bin -o bin/parser.cmo nums.cma -c src/parser.ml
+$OCAMLC -I bin -o bin/lexer.cmo -c src/lexer.ml
+$OCAMLC -I bin -o bin/interpret.cmi -c src/interpret.mli
+$OCAMLC -I bin -o bin/interpret.cmo nums.cma -c src/interpret.ml
+$OCAMLC -I bin -o bin/axioms.cmo nums.cma -c src/axioms.ml
+$OCAMLC -I bin -o bin/mgcheck.cmo -c src/mgcheck.ml
+$OCAMLC -o bin/egal.bytecode unix.cma nums.cma bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/syntax.cmo bin/parser.cmo bin/lexer.cmo bin/interpret.cmo bin/axioms.cmo bin/mgcheck.cmo
+# Qeditas code
+$OCAMLC -I bin -o bin/qser.cmi -c src/qeditas/qser.mli
+$OCAMLC -I bin -o bin/qser.cmo -c src/qeditas/qser.ml
+$OCAMLC -I bin -o bin/qhashaux.cmi -c src/qeditas/qhashaux.mli
+$OCAMLC -I bin -o bin/qhashaux.cmo -c src/qeditas/qhashaux.ml
+$OCAMLC -I bin -o bin/qsha256.cmi -c src/qeditas/qsha256.mli
+$OCAMLC -I bin -o bin/qsha256.cmo -c src/qeditas/qsha256.ml
+$OCAMLC -I bin -o bin/qripemd160.cmi -c src/qeditas/qripemd160.mli
+$OCAMLC -I bin -o bin/qripemd160.cmo -c src/qeditas/qripemd160.ml
+$OCAMLC -I bin -o bin/qhash.cmi -c src/qeditas/qhash.mli
+$OCAMLC -I bin -o bin/qhash.cmo -c src/qeditas/qhash.ml
+$OCAMLC -I bin -o bin/qsyntax.cmo -c src/qeditas/qsyntax.ml
+$OCAMLC -I bin -o bin/qeditasoutput.cmo -c src/qeditas/qeditasoutput.ml
+$OCAMLC -I bin -o bin/egalqedtheory.cmo -c src/egalqedtheory.ml
+$OCAMLC -o bin/egalqedtheory.bytecode unix.cma nums.cma bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/syntax.cmo bin/parser.cmo bin/lexer.cmo bin/interpret.cmo bin/qser.cmo bin/qhashaux.cmo bin/qsha256.cmo bin/qripemd160.cmo bin/qhash.cmo bin/qsyntax.cmo bin/qeditasoutput.cmo bin/axioms.cmo bin/egalqedtheory.cmo
+$OCAMLC -I bin -o bin/egalqeddoc.cmo -c src/egalqeddoc.ml
+$OCAMLC -o bin/egalqeddoc.bytecode unix.cma nums.cma bin/config.cmo bin/secp256k1.cmo bin/cryptocurr.cmo bin/hash.cmo bin/syntax.cmo bin/parser.cmo bin/lexer.cmo bin/interpret.cmo bin/qser.cmo bin/qhashaux.cmo bin/qsha256.cmo bin/qripemd160.cmo bin/qhash.cmo bin/qsyntax.cmo bin/qeditasoutput.cmo bin/axioms.cmo bin/egalqeddoc.cmo
+
