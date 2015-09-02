@@ -499,7 +499,7 @@ let rec seo_pdoc o dl c =
       let c = seo_hashval o h c in
       seo_pdoc o dr c
   | PDocDef(a,m,dr) -> (** 10 1 0 **)
-      let c = o 4 5 c in
+      let c = o 4 6 c in
       let c = seo_tp o a c in
       let c = seo_tm o m c in
       seo_pdoc o dr c
